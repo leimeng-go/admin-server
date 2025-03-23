@@ -1,0 +1,20 @@
+CREATE DATABASE IF NOT EXISTS admin DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE admin;
+
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    nickname VARCHAR(50) NOT NULL,
+    avatar VARCHAR(255) DEFAULT '',
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_username (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 插入默认管理员账号，密码为 admin123
+INSERT INTO users (username, password, nickname, role) VALUES 
+('admin', '$2a$10$RD6c0YT0TiXMgf/2qAFXpehwuTVoQbLLBa.DCUvIKqFj.Ld7SL9Hy', '管理员', 'admin')
+ON DUPLICATE KEY UPDATE id=id; 
