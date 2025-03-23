@@ -3,6 +3,13 @@
 
 package types
 
+type CommonResp struct {
+	Code    int64       `json:"code" doc:"状态码"`
+	Message string      `json:"message" doc:"消息"`
+	Data    interface{} `json:"data" doc:"数据"`
+	Token   string      `json:"token" doc:"凭证"`
+}
+
 type CreateUserReq struct {
 	Username string `json:"username" validate:"required" doc:"用户名，必填"`
 	Password string `json:"password" validate:"required" doc:"密码，必填"`
@@ -16,9 +23,6 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	AccessToken string `json:"accessToken" doc:"JWT访问令牌"`
-	TokenType   string `json:"tokenType" doc:"令牌类型，固定为Bearer"`
-	ExpiresIn   int64  `json:"expiresIn" doc:"令牌过期时间，单位秒"`
 }
 
 type RegisterReq struct {

@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"admin-server/internal/config"
-	"admin-server/internal/handler"
-	"admin-server/internal/svc"
+	"github.com/leimeng-go/admin-server/internal/config"
+	"github.com/leimeng-go/admin-server/internal/handler"
+	"github.com/leimeng-go/admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

@@ -6,7 +6,7 @@ package handler
 import (
 	"net/http"
 
-	"admin-server/internal/svc"
+	"github.com/leimeng-go/admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

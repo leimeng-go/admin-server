@@ -39,13 +39,16 @@ type (
 		// 密码
 		Password string `json:"password" validate:"required" doc:"密码，必填"`
 	}
-	LoginResp {
-		// 访问令牌
-		AccessToken string `json:"accessToken" doc:"JWT访问令牌"`
-		// 令牌类型
-		TokenType string `json:"tokenType" doc:"令牌类型，固定为Bearer"`
-		// 过期时间（秒）
-		ExpiresIn int64 `json:"expiresIn" doc:"令牌过期时间，单位秒"`
+	LoginResp  {}
+	CommonResp {
+		// 状态码
+		Code int64 `json:"code" doc:"状态码"`
+		// 消息
+		Message string `json:"message" doc:"消息"`
+		// 数据
+		Data interface{} `json:"data" doc:"数据"`
+		// 凭证
+		Token string `json:"token" doc:"凭证"`
 	}
 	UserInfo {
 		// 用户ID
@@ -105,15 +108,15 @@ service admin {
 
 	@doc "使用邮箱验证码注册新用户"
 	@handler register
-	post /auth/register (RegisterReq) returns (UserInfo)
+	post /auth/register (RegisterReq) returns (CommonResp)
 
 	@doc "使用用户名和密码登录系统"
 	@handler login
-	post /auth/login (LoginReq) returns (LoginResp)
+	post /auth/login (LoginReq) returns (CommonResp)
 
 	@doc "获取当前登录用户的详细信息"
 	@handler getCurrentUser
-	get /users/current returns (UserInfo)
+	get /users/current returns (CommonResp)
 }
 
 @server (
@@ -131,7 +134,7 @@ service admin {
 
 	@doc "分页获取用户列表，支持关键词搜索"
 	@handler getUserList
-	get /users (UserListReq) returns (UserListResp)
+	get /users (UserListReq) returns (CommonResp)
 
 	@doc "删除指定用户（软删除）"
 	@handler deleteUser

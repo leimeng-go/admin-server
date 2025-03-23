@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/LoginResp"
+              "$ref": "#/definitions/CommonResp"
             }
           }
         },
@@ -51,7 +51,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UserInfo"
+              "$ref": "#/definitions/CommonResp"
             }
           }
         },
@@ -103,7 +103,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UserListResp"
+              "$ref": "#/definitions/CommonResp"
             }
           }
         },
@@ -170,7 +170,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UserInfo"
+              "$ref": "#/definitions/CommonResp"
             }
           }
         },
@@ -233,6 +233,35 @@
     }
   },
   "definitions": {
+    "CommonResp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "title": "CommonResp",
+      "required": [
+        "code",
+        "状态码",
+        "message",
+        "消息",
+        "data",
+        "数据",
+        "token",
+        "凭证"
+      ]
+    },
     "CreateUserReq": {
       "type": "object",
       "properties": {
@@ -281,27 +310,7 @@
     },
     "LoginResp": {
       "type": "object",
-      "properties": {
-        "accessToken": {
-          "type": "string"
-        },
-        "tokenType": {
-          "type": "string"
-        },
-        "expiresIn": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "LoginResp",
-      "required": [
-        "accessToken",
-        "JWT访问令牌",
-        "tokenType",
-        "令牌类型，固定为Bearer",
-        "expiresIn",
-        "令牌过期时间，单位秒"
-      ]
+      "title": "LoginResp"
     },
     "RegisterReq": {
       "type": "object",

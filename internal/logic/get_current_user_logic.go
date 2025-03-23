@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"admin-server/internal/svc"
-	"admin-server/internal/types"
+	"github.com/leimeng-go/admin-server/internal/svc"
+	"github.com/leimeng-go/admin-server/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +24,7 @@ func NewGetCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetCurrentUserLogic) GetCurrentUser() (resp *types.UserInfo, err error) {
+func (l *GetCurrentUserLogic) GetCurrentUser() (resp *types.CommonResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return
