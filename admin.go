@@ -6,6 +6,7 @@ import (
 
 	"github.com/leimeng-go/admin-server/internal/config"
 	"github.com/leimeng-go/admin-server/internal/handler"
+	// "github.com/leimeng-go/admin-server/internal/middleware"
 	"github.com/leimeng-go/admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -25,6 +26,9 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	// 注册 JWT 中间件
+	// server.Use(middleware.JwtAuthMiddleware(c.Auth.AccessSecret))
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
