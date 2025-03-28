@@ -32,12 +32,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/auth/verify-code",
 				Handler: sendVerifyCodeHandler(serverCtx),
 			},
-			{
-				// 获取当前登录用户的详细信息
-				Method:  http.MethodGet,
-				Path:    "/users/current",
-				Handler: getCurrentUserHandler(serverCtx),
-			},
+			
 		},
 		rest.WithPrefix("/api/v1"),
 	)
@@ -46,6 +41,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthMiddleware},
 			[]rest.Route{
+				{
+					// 获取当前登录用户的详细信息
+					Method:  http.MethodGet,
+					Path:    "/users/current",
+					Handler: getCurrentUserHandler(serverCtx),
+				},
 				{
 					// 管理员创建新用户，可以指定用户角色
 					Method:  http.MethodPost,

@@ -1,6 +1,7 @@
 Name: admin
 Host: 0.0.0.0
 Port: 8888
+Timeout: 60
 
 Auth:
   AccessSecret: your-access-secret

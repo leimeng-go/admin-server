@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/leimeng-go/admin-server/internal/errorx"
+	"github.com/leimeng-go/admin-server/internal/middleware"
 	"github.com/leimeng-go/admin-server/internal/svc"
 	"github.com/leimeng-go/admin-server/internal/types"
 
@@ -28,31 +29,36 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.CommonResp, err error) {
 	// 参数验证
 	if req.Username == "" || req.Password == "" {
-		
 		return nil, errorx.ErrInvalidParams
 	}
 
 	// 查找用户
 	user, err := l.svcCtx.UserModel.FindOneByUsername(l.ctx, req.Username)
 	if err != nil {
-		l.Logger.Infof("用户不存在: %v,username: %s", err, req.Username)
 		return nil, errorx.ErrUserNotFound
 	}
 
 	// 检查用户状态
 	if user.Status == 0 {
-		l.Logger.Infof("用户已禁用: %v,username: %s", err, req.Username)
 		return nil, errorx.ErrUserDisabled
 	}
 
 	// 验证密码
 	if user.Password != req.Password {
-		l.Logger.Infof("密码错误: %v,username: %s", err, req.Username)
 		return nil, errorx.ErrPasswordError
 	}
 
-	// TODO: 生成 token
-	token := "your-jwt-token-here"
+	// 生成 token
+	token, err := middleware.GenerateToken(
+		user.Id,
+		user.Username,
+		user.Role,
+		l.svcCtx.Config.Auth.AccessSecret,
+		l.svcCtx.Config.Auth.AccessExpire,
+	)
+	if err != nil {
+		return nil, errorx.ErrServerError
+	}
 
 	return &types.CommonResp{
 		Code:    0,
