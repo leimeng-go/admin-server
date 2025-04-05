@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	model "github.com/leimeng-go/admin-server/internal/model"
+	model "admin-server/internal/model"
 	context "context"
 	sql "database/sql"
 	reflect "reflect"

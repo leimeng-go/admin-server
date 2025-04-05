@@ -4,16 +4,17 @@
 package types
 
 type CommonResp struct {
-	Code    int64       `json:"code" doc:"状态码"`
+	Code    int         `json:"code" doc:"状态码"`
 	Message string      `json:"message" doc:"消息"`
-	Data    interface{} `json:"data" doc:"数据"`
-	Token   string      `json:"token" doc:"凭证"`
+	Data    interface{} `json:"data,omitempty" doc:"数据"`
+	// Token   string      `json:"token,omitempty" doc:"凭证"`
 }
 
 type CreateUserReq struct {
 	Username string `json:"username" validate:"required" doc:"用户名，必填"`
 	Password string `json:"password" validate:"required" doc:"密码，必填"`
 	Nickname string `json:"nickname" validate:"required" doc:"用户昵称，必填"`
+	Mobile   string `json:"mobile" validate:"required,len=11" doc:"手机号，必填且为11位"`
 	Role     string `json:"role" validate:"required,oneof=admin user" doc:"用户角色，必须是admin或user"`
 }
 
@@ -23,15 +24,17 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
+	Token string `json:"token" doc:"凭证"`
 }
 
 type RegisterReq struct {
-	Username        string `json:"username" validate:"required" doc:"用户名，必填"`
-	Email           string `json:"email" validate:"required,email" doc:"邮箱地址，必填且格式正确"`
-	Password        string `json:"password" validate:"required,min=6" doc:"密码，至少6位"`
+	Username        string `json:"username" validate:"required,min=3,max=50" doc:"用户名，必填，长度3-50"`
+	Email           string `json:"email" validate:"omitempty,email" doc:"邮箱地址，选填，格式正确"`
+	Mobile          string `json:"mobile" validate:"omitempty,len=11" doc:"手机号，选填，必须为11位"`
+	Password        string `json:"password" validate:"required,min=6,max=20" doc:"密码，必填，至少6位，最多20位"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password" doc:"确认密码，必须与密码相同"`
 	VerifyCode      string `json:"verifyCode" validate:"required,len=6" doc:"6位数字验证码"`
-	Nickname        string `json:"nickname" validate:"required" doc:"用户昵称"`
+	Nickname        string `json:"nickname" validate:"required,min=2,max=50" doc:"用户昵称，必填，长度2-50"`
 }
 
 type SendVerifyCodeReq struct {
@@ -39,24 +42,26 @@ type SendVerifyCodeReq struct {
 }
 
 type UpdateUserReq struct {
-	Id       int64  `json:"id" validate:"required" doc:"用户ID，必填"`
-	Nickname string `json:"nickname,optional" doc:"用户昵称，选填"`
-	Avatar   string `json:"avatar,optional" doc:"用户头像URL，选填"`
-	Role     string `json:"role,optional" validate:"omitempty,oneof=admin user" doc:"用户角色，选填，必须是admin或user"`
+	Id       uint64 `json:"id" validate:"required" doc:"用户ID，必填"`
+	Nickname string `json:"nickname" validate:"omitempty,min=2,max=50" doc:"用户昵称，选填，长度2-50"`
+	Avatar   string `json:"avatar" validate:"omitempty,url" doc:"用户头像URL，选填，必须是有效的URL"`
+	Mobile   string `json:"mobile" validate:"omitempty,len=11" doc:"手机号，选填，必须为11位"`
+	Role     string `json:"role" validate:"omitempty,oneof=admin user" doc:"用户角色，选填，必须是admin或user"`
 }
 
 type UserInfo struct {
-	Id       int64  `json:"id" doc:"用户ID"`
+	Id       uint64 `json:"id" doc:"用户ID"`
 	Username string `json:"username" doc:"用户名"`
 	Nickname string `json:"nickname" doc:"用户昵称"`
 	Avatar   string `json:"avatar" doc:"用户头像URL"`
+	Mobile   string `json:"mobile" doc:"手机号"`
 	Role     string `json:"role" doc:"用户角色：admin或user"`
 }
 
 type UserListReq struct {
-	Page     int64  `form:"page,default=1" validate:"required,min=1" doc:"页码，从1开始"`
-	PageSize int64  `form:"pageSize,default=20" validate:"required,min=1,max=100" doc:"每页数量，1-100"`
-	Keyword  string `form:"keyword,optional" doc:"搜索关键词，可选"`
+	Page     int64  `json:"page" form:"page" validate:"required,min=1" doc:"页码，从1开始"`
+	PageSize int64  `json:"pageSize" form:"pageSize" validate:"required,min=1,max=100" doc:"每页数量，1-100"`
+	Keyword  string `json:"keyword" form:"keyword" validate:"omitempty" doc:"搜索关键词，可选"`
 }
 
 type UserListResp struct {

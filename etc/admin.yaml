@@ -1,11 +1,11 @@
 Name: admin
 Host: 0.0.0.0
 Port: 8888
-Timeout: 60
+Timeout: 60000
 
 Auth:
-  AccessSecret: your-access-secret
-  AccessExpire: 86400
+  AccessSecret: fsfjsldkjfkdjkjfkdjf
+  AccessExpire: 1800
 
 MySQL:
   DataSource: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai

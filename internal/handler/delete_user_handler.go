@@ -3,8 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/leimeng-go/admin-server/internal/logic"
-	"github.com/leimeng-go/admin-server/internal/svc"
+	"admin-server/internal/logic"
+	"admin-server/internal/svc"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

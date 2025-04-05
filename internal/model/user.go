@@ -7,39 +7,51 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
-type User struct {
-	Id        int64     `db:"id"`
-	Username  string    `db:"username"`
-	Password  string    `db:"password"`
-	Nickname  string    `db:"nickname"`
-	Avatar    string    `db:"avatar"`
-	Email     string    `db:"email"`
-	Role      string    `db:"role"`
-	Status    int       `db:"status"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
-}
+var (
+	userFieldNames        = strings.Join([]string{"id", "username", "password", "nickname", "avatar", "email", "mobile", "role", "status", "created_at", "updated_at", "deleted_at"}, ",")
+	userRows              = strings.Join([]string{"?", "?", "?", "?", "?", "?", "?", "?", "?", "CURRENT_TIMESTAMP", "CURRENT_TIMESTAMP", "?"}, ",")
+	cacheUserIdPrefix     = "cache:user:id:"
+	cacheUserNamePrefix   = "cache:user:name:"
+	cacheUserEmailPrefix  = "cache:user:email:"
+	cacheUserMobilePrefix = "cache:user:mobile:"
+)
 
-type UserModel interface {
-	Insert(ctx context.Context, data *User) (sql.Result, error)
-	FindOne(ctx context.Context, id int64) (*User, error)
-	FindOneByUsername(ctx context.Context, username string) (*User, error)
-	FindOneByEmail(ctx context.Context, email string) (*User, error)
-	Update(ctx context.Context, data *User) error
-	Delete(ctx context.Context, id int64) error
-	ExistsByUsername(ctx context.Context, username string) (bool, error)
-	ExistsByEmail(ctx context.Context, email string) (bool, error)
-	FindList(ctx context.Context, page, pageSize int64, keyword string) ([]*User, int64, error)
-	SoftDelete(ctx context.Context, id int64) error
-}
+type (
+	User struct {
+		Id        uint64       `db:"id"`
+		Username  string       `db:"username"`
+		Password  string       `db:"password"`
+		Nickname  string       `db:"nickname"`
+		Avatar    string       `db:"avatar"`
+		Email     string       `db:"email"`
+		Mobile    string       `db:"mobile"`
+		Role      string       `db:"role"`
+		Status    int64        `db:"status"`
+		CreatedAt time.Time    `db:"created_at"`
+		UpdatedAt time.Time    `db:"updated_at"`
+		DeletedAt sql.NullTime `db:"deleted_at"`
+	}
 
-type defaultUserModel struct {
-	conn  sqlx.SqlConn
-	table string
-}
+	UserModel interface {
+		Insert(ctx context.Context, data *User) (sql.Result, error)
+		FindOne(ctx context.Context, id uint64) (*User, error)
+		FindOneByUsername(ctx context.Context, username string) (*User, error)
+		FindOneByEmail(ctx context.Context, email string) (*User, error)
+		FindOneByMobile(ctx context.Context, mobile string) (*User, error)
+		Update(ctx context.Context, data *User) error
+		Delete(ctx context.Context, id uint64) error
+		List(ctx context.Context, page, pageSize int64, keyword string) ([]*User, int64, error)
+	}
+
+	defaultUserModel struct {
+		conn  sqlx.SqlConn
+		table string
+	}
+)
 
 func NewUserModel(conn sqlx.SqlConn) UserModel {
 	return &defaultUserModel{
@@ -49,94 +61,107 @@ func NewUserModel(conn sqlx.SqlConn) UserModel {
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (username, password, nickname, avatar, email, role, status) values (?, ?, ?, ?, ?, ?, ?)", m.table)
-	return m.conn.ExecCtx(ctx, query, data.Username, data.Password, data.Nickname, data.Avatar, data.Email, data.Role, data.Status)
+	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", m.table, userFieldNames, userRows)
+	return m.conn.ExecCtx(ctx, query, data.Id, data.Username, data.Password, data.Nickname,
+		data.Avatar, data.Email, data.Mobile, data.Role, data.Status, data.DeletedAt)
 }
 
-func (m *defaultUserModel) FindOne(ctx context.Context, id int64) (*User, error) {
-	query := fmt.Sprintf("select * from %s where id = ? limit 1", m.table)
+func (m *defaultUserModel) FindOne(ctx context.Context, id uint64) (*User, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? AND deleted_at IS NULL LIMIT 1", userFieldNames, m.table)
 	var resp User
 	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
-	if err != nil {
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
 		return nil, err
 	}
-	return &resp, nil
 }
 
 func (m *defaultUserModel) FindOneByUsername(ctx context.Context, username string) (*User, error) {
-	query := fmt.Sprintf("select * from %s where username = ? limit 1", m.table)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE username = ? AND deleted_at IS NULL LIMIT 1", userFieldNames, m.table)
 	var resp User
 	err := m.conn.QueryRowCtx(ctx, &resp, query, username)
-	if err != nil {
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
 		return nil, err
 	}
-	return &resp, nil
 }
 
 func (m *defaultUserModel) FindOneByEmail(ctx context.Context, email string) (*User, error) {
-	query := fmt.Sprintf("select * from %s where email = ? limit 1", m.table)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE email = ? AND deleted_at IS NULL LIMIT 1", userFieldNames, m.table)
 	var resp User
 	err := m.conn.QueryRowCtx(ctx, &resp, query, email)
-	if err != nil {
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
 		return nil, err
 	}
-	return &resp, nil
+}
+
+func (m *defaultUserModel) FindOneByMobile(ctx context.Context, mobile string) (*User, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE mobile = ? AND deleted_at IS NULL LIMIT 1", userFieldNames, m.table)
+	var resp User
+	err := m.conn.QueryRowCtx(ctx, &resp, query, mobile)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
-	query := fmt.Sprintf("update %s set nickname = ?, avatar = ?, email = ?, role = ?, status = ? where id = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, data.Nickname, data.Avatar, data.Email, data.Role, data.Status, data.Id)
+	query := fmt.Sprintf("UPDATE %s SET nickname=?, avatar=?, email=?, mobile=?, role=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=? AND deleted_at IS NULL", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, data.Nickname, data.Avatar, data.Email, data.Mobile, data.Role, data.Status, data.Id)
 	return err
 }
 
-func (m *defaultUserModel) Delete(ctx context.Context, id int64) error {
-	query := fmt.Sprintf("update %s set status = ? where id = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, UserStatusDeleted, id)
+func (m *defaultUserModel) Delete(ctx context.Context, id uint64) error {
+	query := fmt.Sprintf("UPDATE %s SET deleted_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE id=? AND deleted_at IS NULL", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, id)
 	return err
 }
 
-func (m *defaultUserModel) ExistsByUsername(ctx context.Context, username string) (bool, error) {
-	query := fmt.Sprintf("select count(*) from %s where username = ?", m.table)
-	var count int
-	err := m.conn.QueryRowCtx(ctx, &count, query, username)
-	if err != nil {
-		return false, err
+func (m *defaultUserModel) List(ctx context.Context, page, pageSize int64, keyword string) ([]*User, int64, error) {
+	if page < 1 {
+		page = 1
 	}
-	return count > 0, nil
-}
-
-func (m *defaultUserModel) ExistsByEmail(ctx context.Context, email string) (bool, error) {
-	query := fmt.Sprintf("select count(*) from %s where email = ?", m.table)
-	var count int
-	err := m.conn.QueryRowCtx(ctx, &count, query, email)
-	if err != nil {
-		return false, err
+	if pageSize < 1 {
+		pageSize = 20
 	}
-	return count > 0, nil
-}
+	offset := (page - 1) * pageSize
 
-func (m *defaultUserModel) FindList(ctx context.Context, page, pageSize int64, keyword string) ([]*User, int64, error) {
-	var conditions []string
-	var args []interface{}
+	where := "WHERE deleted_at IS NULL"
+	args := make([]interface{}, 0)
 	if keyword != "" {
-		conditions = append(conditions, "(username like ? or nickname like ?)")
-		args = append(args, "%"+keyword+"%", "%"+keyword+"%")
+		where += " AND (username LIKE ? OR nickname LIKE ? OR email LIKE ? OR mobile LIKE ?)"
+		keyword = "%" + keyword + "%"
+		args = append(args, keyword, keyword, keyword, keyword)
 	}
 
-	where := "where 1=1"
-	if len(conditions) > 0 {
-		where += " and " + strings.Join(conditions, " and ")
-	}
-
-	countQuery := fmt.Sprintf("select count(*) from %s %s", m.table, where)
+	// 查询总数
+	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM %s %s", m.table, where)
 	var total int64
 	err := m.conn.QueryRowCtx(ctx, &total, countQuery, args...)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	query := fmt.Sprintf("select * from %s %s limit ?,?", m.table, where)
-	args = append(args, (page-1)*pageSize, pageSize)
+	// 查询数据
+	query := fmt.Sprintf("SELECT %s FROM %s %s ORDER BY id DESC LIMIT ? OFFSET ?", userFieldNames, m.table, where)
+	args = append(args, pageSize, offset)
 	var resp []*User
 	err = m.conn.QueryRowsCtx(ctx, &resp, query, args...)
 	if err != nil {
@@ -146,26 +171,24 @@ func (m *defaultUserModel) FindList(ctx context.Context, page, pageSize int64, k
 	return resp, total, nil
 }
 
-func (m *defaultUserModel) SoftDelete(ctx context.Context, id int64) error {
-	return m.Delete(ctx, id)
-}
-
 const (
 	UserStatusNormal   = 1
 	UserStatusDisabled = 2
 	UserStatusDeleted  = 3
 
 	createUserTable = `CREATE TABLE IF NOT EXISTS users (
-		id BIGINT PRIMARY KEY AUTO_INCREMENT,
+		id BIGINT UNSIGNED PRIMARY KEY,
 		username VARCHAR(50) NOT NULL UNIQUE,
 		password VARCHAR(100) NOT NULL,
 		nickname VARCHAR(50) NOT NULL,
 		avatar VARCHAR(255) DEFAULT '',
 		email VARCHAR(100) NOT NULL DEFAULT '',
+		mobile VARCHAR(20) NOT NULL DEFAULT '',
 		role VARCHAR(20) NOT NULL DEFAULT 'user',
 		status TINYINT NOT NULL DEFAULT 1,
 		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		deleted_at TIMESTAMP NULL DEFAULT NULL,
 		INDEX idx_username (username),
 		INDEX idx_email (email)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`

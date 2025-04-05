@@ -2,12 +2,14 @@ package logic
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 
-	"github.com/leimeng-go/admin-server/internal/errorx"
-	"github.com/leimeng-go/admin-server/internal/middleware"
-	"github.com/leimeng-go/admin-server/internal/svc"
-	"github.com/leimeng-go/admin-server/internal/types"
-
+	"admin-server/internal/errorx"
+	"admin-server/internal/model"
+	"admin-server/internal/svc"
+	"admin-server/internal/types"
+	"admin-server/internal/utils"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -26,44 +28,34 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
-func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.CommonResp, err error) {
-	// 参数验证
-	if req.Username == "" || req.Password == "" {
-		return nil, errorx.ErrInvalidParams
-	}
-
+func (l *LoginLogic) Login(req *types.LoginReq) (map[string]interface{}, error) {
 	// 查找用户
 	user, err := l.svcCtx.UserModel.FindOneByUsername(l.ctx, req.Username)
 	if err != nil {
 		return nil, errorx.ErrUserNotFound
 	}
 
-	// 检查用户状态
-	if user.Status == 0 {
+	// 验证密码
+	h := md5.New()
+	h.Write([]byte(req.Password))
+	passwordHash := hex.EncodeToString(h.Sum(nil))
+	if passwordHash != user.Password {
+		return nil, errorx.ErrInvalidParams
+	}
+
+	// 验证状态
+	if user.Status != model.UserStatusNormal {
 		return nil, errorx.ErrUserDisabled
 	}
 
-	// 验证密码
-	if user.Password != req.Password {
-		return nil, errorx.ErrPasswordError
-	}
-
-	// 生成 token
-	token, err := middleware.GenerateToken(
-		user.Id,
-		user.Username,
-		user.Role,
-		l.svcCtx.Config.Auth.AccessSecret,
-		l.svcCtx.Config.Auth.AccessExpire,
-	)
+	
+	
+	token, err := utils.BuildToken(l.svcCtx.Config.Auth.AccessSecret, map[string]any{"user_id": user.Id}, l.svcCtx.Config.Auth.AccessExpire)
 	if err != nil {
 		return nil, errorx.ErrServerError
 	}
 
-	return &types.CommonResp{
-		Code:    0,
-		Message: "登录成功",
-		Data:    user,
-		Token:   token,
+	return map[string]interface{}{
+		"token": token,
 	}, nil
 }

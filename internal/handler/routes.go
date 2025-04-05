@@ -6,7 +6,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/leimeng-go/admin-server/internal/svc"
+	"admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -15,64 +15,50 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 使用用户名和密码登录系统
+				Method:  http.MethodPost,
+				Path:    "/auth/register",
+				Handler: RegisterHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/auth/login",
 				Handler: loginHandler(serverCtx),
 			},
 			{
-				// 使用邮箱验证码注册新用户
 				Method:  http.MethodPost,
-				Path:    "/auth/register",
-				Handler: registerHandler(serverCtx),
-			},
-			{
-				// 发送邮箱验证码，用于注册验证
-				Method:  http.MethodPost,
-				Path:    "/auth/verify-code",
+				Path: "/auth/verify-code",
 				Handler: sendVerifyCodeHandler(serverCtx),
 			},
-			
 		},
 		rest.WithPrefix("/api/v1"),
 	)
-
+    
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Middleware{},
 			[]rest.Route{
 				{
-					// 获取当前登录用户的详细信息
 					Method:  http.MethodGet,
-					Path:    "/users/current",
+					Path:    "/user/info",
 					Handler: getCurrentUserHandler(serverCtx),
 				},
 				{
-					// 管理员创建新用户，可以指定用户角色
-					Method:  http.MethodPost,
-					Path:    "/users",
-					Handler: createUserHandler(serverCtx),
-				},
-				{
-					// 分页获取用户列表，支持关键词搜索
-					Method:  http.MethodGet,
-					Path:    "/users",
-					Handler: getUserListHandler(serverCtx),
-				},
-				{
-					// 更新指定用户的昵称、头像或角色
 					Method:  http.MethodPut,
-					Path:    "/users/:id",
+					Path:    "/user/update",
 					Handler: updateUserHandler(serverCtx),
 				},
 				{
-					// 删除指定用户（软删除）
 					Method:  http.MethodDelete,
-					Path:    "/users/:id",
+					Path:    "/user/delete",
 					Handler: deleteUserHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/user/list",
+					Handler: getUserListHandler(serverCtx),
+				},
 			}...,
-		),
+		),rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 }

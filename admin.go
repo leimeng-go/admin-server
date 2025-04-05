@@ -4,10 +4,11 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/leimeng-go/admin-server/internal/config"
-	"github.com/leimeng-go/admin-server/internal/handler"
-	// "github.com/leimeng-go/admin-server/internal/middleware"
-	"github.com/leimeng-go/admin-server/internal/svc"
+	"admin-server/internal/config"
+	"admin-server/internal/handler"
+
+	// "admin-server/internal/middleware"
+	"admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -23,6 +24,7 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf, rest.WithCors())
 	defer server.Stop()
+	
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)

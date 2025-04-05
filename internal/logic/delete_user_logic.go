@@ -3,7 +3,8 @@ package logic
 import (
 	"context"
 
-	"github.com/leimeng-go/admin-server/internal/svc"
+	"admin-server/internal/svc"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
