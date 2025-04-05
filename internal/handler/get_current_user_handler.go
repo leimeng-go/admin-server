@@ -5,8 +5,7 @@ import (
 
 	"admin-server/internal/logic"
 	"admin-server/internal/svc"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
+	"admin-server/internal/errorx"
 )
 
 // 获取当前登录用户的详细信息
@@ -15,9 +14,10 @@ func getCurrentUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := logic.NewGetCurrentUserLogic(r.Context(), svcCtx)
 		resp, err := l.GetCurrentUser()
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			errorx.WriteError(w, err)
+			return
 		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
+			errorx.WriteSuccess(w, resp)
 		}
 	}
 }

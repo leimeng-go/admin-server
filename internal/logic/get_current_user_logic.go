@@ -5,7 +5,7 @@ import (
 
 	"admin-server/internal/svc"
 	"admin-server/internal/types"
-
+	"admin-server/internal/utils"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,8 +24,26 @@ func NewGetCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetCurrentUserLogic) GetCurrentUser() (resp *types.CommonResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+func (l *GetCurrentUserLogic) GetCurrentUser() (user *types.UserInfo, err error) {
+	userID, err := utils.GetUserIdFromCtx(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+	muser, err:= l.svcCtx.UserModel.FindOne(l.ctx, userID)
+	if err != nil {
+		return nil, err	
+	}
+	return &types.UserInfo{
+		ID:       muser.Id,
+		Username: muser.Username,
+		Nickname: muser.Nickname,
+		Avatar:   muser.Avatar,
+		Email:    muser.Email,
+		Mobile:   muser.Mobile,
+		Role:     muser.Role,
+		Status:   muser.Status,
+		CreatedAt: muser.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: muser.UpdatedAt.Format("2006-01-02 15:04:05"),
+	},nil
+	
 }

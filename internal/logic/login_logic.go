@@ -48,8 +48,6 @@ func (l *LoginLogic) Login(req *types.LoginReq) (map[string]interface{}, error) 
 		return nil, errorx.ErrUserDisabled
 	}
 
-	
-	
 	token, err := utils.BuildToken(l.svcCtx.Config.Auth.AccessSecret, map[string]any{"user_id": user.Id}, l.svcCtx.Config.Auth.AccessExpire)
 	if err != nil {
 		return nil, errorx.ErrServerError

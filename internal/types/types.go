@@ -49,14 +49,14 @@ type UpdateUserReq struct {
 	Role     string `json:"role" validate:"omitempty,oneof=admin user" doc:"用户角色，选填，必须是admin或user"`
 }
 
-type UserInfo struct {
-	Id       uint64 `json:"id" doc:"用户ID"`
-	Username string `json:"username" doc:"用户名"`
-	Nickname string `json:"nickname" doc:"用户昵称"`
-	Avatar   string `json:"avatar" doc:"用户头像URL"`
-	Mobile   string `json:"mobile" doc:"手机号"`
-	Role     string `json:"role" doc:"用户角色：admin或user"`
-}
+// type UserInfo struct {
+// 	Id       uint64 `json:"id" doc:"用户ID"`
+// 	Username string `json:"username" doc:"用户名"`
+// 	Nickname string `json:"nickname" doc:"用户昵称"`
+// 	Avatar   string `json:"avatar" doc:"用户头像URL"`
+// 	Mobile   string `json:"mobile" doc:"手机号"`
+// 	Role     string `json:"role" doc:"用户角色：admin或user"`
+// }
 
 type UserListReq struct {
 	Page     int64  `json:"page" form:"page" validate:"required,min=1" doc:"页码，从1开始"`
