@@ -5,7 +5,7 @@ SWAGGER_FILE=docs/swagger.json
 
 # 默认目标
 .PHONY: all
-all: clean api swagger build
+all: clean swagger build
 
 # 生成 API 代码
 .PHONY: api
