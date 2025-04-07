@@ -1,4 +1,4 @@
-package logic
+package user
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"admin-server/internal/svc"
 	"admin-server/internal/types"
 	"admin-server/internal/utils"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,21 +30,21 @@ func (l *GetCurrentUserLogic) GetCurrentUser() (user *types.UserInfo, err error)
 	if err != nil {
 		return nil, err
 	}
-	muser, err:= l.svcCtx.UserModel.FindOne(l.ctx, userID)
+	muser, err := l.svcCtx.UserModel.FindOne(l.ctx, userID)
 	if err != nil {
-		return nil, err	
+		return nil, err
 	}
 	return &types.UserInfo{
-		ID:       muser.Id,
-		Username: muser.Username,
-		Nickname: muser.Nickname,
-		Avatar:   muser.Avatar,
-		Email:    muser.Email,
-		Mobile:   muser.Mobile,
-		Role:     muser.Role,
-		Status:   muser.Status,
+		ID:        muser.Id,
+		Username:  muser.Username,
+		Nickname:  muser.Nickname,
+		Avatar:    muser.Avatar,
+		Email:     muser.Email,
+		Mobile:    muser.Mobile,
+		Role:      muser.Role,
+		Status:    muser.Status,
 		CreatedAt: muser.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: muser.UpdatedAt.Format("2006-01-02 15:04:05"),
-	},nil
-	
+	}, nil
+
 }

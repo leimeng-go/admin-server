@@ -1,4 +1,4 @@
-package logic
+package user
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	"admin-server/internal/svc"
 	"admin-server/internal/types"
 	"admin-server/internal/utils"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

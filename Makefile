@@ -2,6 +2,7 @@
 BINARY=admin-server
 API_FILE=admin.api
 SWAGGER_FILE=docs/swagger.json
+MODEL_DIR=internal/model
 
 # 默认目标
 .PHONY: all
@@ -18,6 +19,12 @@ api:
 	@rm -rf internal/middleware
 	@echo "Generating API code..."
 	goctl api go -api $(API_FILE) -dir . -style go_zero
+
+# 生成 model 代码
+.PHONY: model
+model:
+	@echo "Generating model code from MySQL DDL..."
+	goctl model mysql ddl -src=./internal/model/sql/*.sql -dir=./internal/model -style=go_zero -cache=true
 
 # 生成 swagger 文档
 .PHONY: swagger
