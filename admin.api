@@ -99,7 +99,7 @@ type (
 )
 
 @server (
-	prefix: /api/v1
+	 
 )
 service admin {
 	@doc "发送邮箱验证码，用于注册验证"

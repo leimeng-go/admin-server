@@ -1,9 +1,9 @@
-package handler
+package user
 
 import (
 	"net/http"
 
-	"admin-server/internal/logic"
+	"admin-server/internal/logic/user"
 	"admin-server/internal/svc"
 	"admin-server/internal/types"
 
@@ -11,7 +11,7 @@ import (
 )
 
 // 发送邮箱验证码，用于注册验证
-func sendVerifyCodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func SendVerifyCodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.SendVerifyCodeReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -19,7 +19,7 @@ func sendVerifyCodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := logic.NewSendVerifyCodeLogic(r.Context(), svcCtx)
+		l := user.NewSendVerifyCodeLogic(r.Context(), svcCtx)
 		err := l.SendVerifyCode(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

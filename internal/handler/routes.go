@@ -9,6 +9,7 @@ import (
 	"admin-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
+    "admin-server/internal/handler/user"
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
@@ -17,17 +18,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/auth/register",
-				Handler: registerHandler(serverCtx),
+				Handler: user.RegisterHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/auth/login",
-				Handler: loginHandler(serverCtx),
+				Handler: user.LoginHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path: "/auth/verify-code",
-				Handler: sendVerifyCodeHandler(serverCtx),
+				Handler: user.SendVerifyCodeHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -40,22 +41,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/user/info",
-					Handler: getCurrentUserHandler(serverCtx),
+					Handler: user.GetCurrentUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
 					Path:    "/user/update",
-					Handler: updateUserHandler(serverCtx),
+					Handler: user.UpdateUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/user/delete",
-					Handler: deleteUserHandler(serverCtx),
+					Handler: user.DeleteUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/user/list",
-					Handler: getUserListHandler(serverCtx),
+					Handler: user.GetUserListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/user/menu",
+					Handler: user.GetUserMenuHandler(serverCtx),
 				},
 			}...,
 		),rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

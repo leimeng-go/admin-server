@@ -11,6 +11,11 @@ import (
 type ServiceContext struct {
 	Config         config.Config
 	UserModel      model.UserModel
+	MenusModel     model.MenusModel
+	RoleModel      model.RoleModel
+	UserRoleModel  model.RoleUserModel
+	RoleMenuModel  model.RoleMenuModel
+	MenuModel      model.MenusModel
 	Snowflake      *utils.Snowflake
 	// AuthMiddleware rest.Middleware
 }

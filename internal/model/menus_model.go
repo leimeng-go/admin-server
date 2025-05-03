@@ -1,10 +1,10 @@
 package model
 
 import (
+	"context"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"context"
-	"fmt"
+	"fmt"		
 )
 
 var _ MenusModel = (*customMenusModel)(nil)
@@ -14,9 +14,7 @@ type (
 	// and implement the added methods in customMenusModel.
 	MenusModel interface {
 		menusModel
-		FindByParentId(ctx context.Context, parentId int64) ([]*Menus, error)
-		FindByRoleIds(ctx context.Context, roleIds []int64) ([]*Menus, error)
-		FindByUserId(ctx context.Context, userId int64) ([]*Menus, error)
+		FindMenusByIDs(ctx context.Context,ids []int64)([]*Menus,error)		
 	}
 
 	customMenusModel struct {
@@ -31,24 +29,9 @@ func NewMenusModel(conn sqlx.SqlConn, c cache.NodeConf, opts ...cache.Option) Me
 	}
 }
 
-// FindByParentId 根据父ID查询菜单
-func (m *customMenusModel) FindByParentId(ctx context.Context, parentId int64) ([]*Menus, error) {
-    query := fmt.Sprintf("select %s from %s where parent_menu_id = ? and is_hide = 0 order by menu_id asc", menuRows, m.table)
-    var resp []*Menus
-    err := m.QueryRowsNoCacheCtx(ctx, &resp, query, parentId)
-    return resp, err
-}
-
-func (m *customMenusModel) FindByRoleIds(ctx context.Context, roleIds []int64) ([]*Menus, error) {
-	query := fmt.Sprintf("select %s from %s where role_id in (?) and is_hide = 0 order by menu_id asc", menuRows, m.table)
+func (m *customMenusModel) FindMenusByIDs(ctx context.Context,ids []int64)([]*Menus,error){
+	query := fmt.Sprintf("select %s from %s where id in (?)", menusRows, m.table)
 	var resp []*Menus
-	err := m.conn.QueryRows(&resp, query, roleIds)
-	return resp, err
-}
-
-func (m *customMenusModel) FindByUserId(ctx context.Context, userId int64) ([]*Menus, error) {
-	query := fmt.Sprintf("select %s from %s where user_id = ? and is_hide = 0 order by menu_id asc", menuRows, m.table)
-	var resp []*Menus
-	err := m.conn.QueryRows(&resp, query, userId)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, ids)
 	return resp, err
 }

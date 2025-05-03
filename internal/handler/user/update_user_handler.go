@@ -1,9 +1,9 @@
-package handler
+package user
 
 import (
 	"net/http"
 
-	"admin-server/internal/logic"
+	"admin-server/internal/logic/user"
 	"admin-server/internal/svc"
 	"admin-server/internal/types"
 
@@ -11,7 +11,7 @@ import (
 )
 
 // 更新指定用户的昵称、头像或角色
-func updateUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UpdateUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.UpdateUserReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -19,7 +19,7 @@ func updateUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := logic.NewUpdateUserLogic(r.Context(), svcCtx)
+		l := user.NewUpdateUserLogic(r.Context(), svcCtx)
 		err := l.UpdateUser(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

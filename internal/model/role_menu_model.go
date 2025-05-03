@@ -14,8 +14,7 @@ type (
 	// and implement the added methods in customRoleMenuModel.
 	RoleMenuModel interface {
 		roleMenuModel
-		FindByRoleId(ctx context.Context,roleId int64)([]*RoleMenu,error)
-		FindByMenuId(ctx context.Context,menuId int64)([]*RoleMenu,error)
+		FindMenuIDsByRoleId(ctx context.Context,roleId int64)([]*RoleMenu,error)
 	}
 
 	customRoleMenuModel struct {
@@ -30,16 +29,10 @@ func NewRoleMenuModel(conn sqlx.SqlConn, c cache.NodeConf, opts ...cache.Option)
 	}
 }
 
-func (m *customRoleMenuModel) FindByRoleId(ctx context.Context,roleId int64)([]*RoleMenu,error){
+func (m *customRoleMenuModel) FindMenuIDsByRoleId(ctx context.Context,roleId int64)([]*RoleMenu,error){
 	query := fmt.Sprintf("select %s from %s where role_id = ?", roleMenuRows, m.table)
 	var resp []*RoleMenu
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, roleId)
 	return resp, err
 }
 
-func (m *customRoleMenuModel) FindByMenuId(ctx context.Context,menuId int64)([]*RoleMenu,error){
-	query := fmt.Sprintf("select %s from %s where menu_id = ?", roleMenuRows, m.table)
-	var resp []*RoleMenu
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, menuId)
-	return resp, err
-}
