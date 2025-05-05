@@ -10,23 +10,24 @@ import (
 
 type ServiceContext struct {
 	Config         config.Config
-	UserModel      model.UserModel
-	MenusModel     model.MenusModel
+	UserModel      model.UsersModel
 	RoleModel      model.RoleModel
 	UserRoleModel  model.RoleUserModel
 	RoleMenuModel  model.RoleMenuModel
-	MenuModel      model.MenusModel
+	MenuModel      model.MenuModel
 	Snowflake      *utils.Snowflake
-	// AuthMiddleware rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.MySQL.DataSource)
 	snowflake, _ := utils.NewSnowflake(1) // 使用机器ID 1
-	// rest.WithUnauthorizedCallback()
 	return &ServiceContext{
 		Config:         c,
-		UserModel:      model.NewUserModel(conn),
+		UserModel:      model.NewUsersModel(conn, c.CacheRedis),
+		RoleModel:      model.NewRoleModel(conn, c.CacheRedis),
+		UserRoleModel:  model.NewRoleUserModel(conn, c.CacheRedis),
+		RoleMenuModel:  model.NewRoleMenuModel(conn, c.CacheRedis),
+		MenuModel:      model.NewMenuModel(conn, c.CacheRedis),
 		Snowflake:      snowflake,
 		// AuthMiddleware: rest.NewJwtAuthMiddleware(c.Auth.AccessSecret).Handle,
 	}

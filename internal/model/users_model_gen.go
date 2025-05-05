@@ -25,14 +25,14 @@ var (
 	usersRowsWithPlaceHolder = strings.Join(stringx.Remove(usersFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheUsersIdPrefix       = "cache:users:id:"
-	cacheUsersUsernamePrefix = "cache:users:username:"
+	cacheUsersUserNamePrefix = "cache:users:userName:"
 )
 
 type (
 	usersModel interface {
 		Insert(ctx context.Context, data *Users) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Users, error)
-		FindOneByUsername(ctx context.Context, username string) (*Users, error)
+		FindOneByUserName(ctx context.Context, userName string) (*Users, error)
 		Update(ctx context.Context, data *Users) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -44,12 +44,14 @@ type (
 
 	Users struct {
 		Id        int64        `db:"id"`
-		Username  string       `db:"username"`   // 用户名
+		UserName  string       `db:"user_name"`  // 用户名
 		Password  string       `db:"password"`   // 密码
-		Nickname  string       `db:"nickname"`   // 昵称
+		NickName  string       `db:"nick_name"`  // 昵称
 		Avatar    string       `db:"avatar"`     // 头像
-		Role      string       `db:"role"`       // 角色
+		RoleId    int64        `db:"role_id"`    // 角色ID
 		Status    int64        `db:"status"`     // 状态 1:正常 0:禁用 -1:删除
+		Email     string       `db:"email"`      // 邮箱
+		Mobile    string       `db:"mobile"`     // 手机号
 		CreatedAt time.Time    `db:"created_at"` // 创建时间
 		UpdatedAt time.Time    `db:"updated_at"` // 更新时间
 		DeletedAt sql.NullTime `db:"deleted_at"` // 删除时间
@@ -70,11 +72,11 @@ func (m *defaultUsersModel) Delete(ctx context.Context, id int64) error {
 	}
 
 	usersIdKey := fmt.Sprintf("%s%v", cacheUsersIdPrefix, id)
-	usersUsernameKey := fmt.Sprintf("%s%v", cacheUsersUsernamePrefix, data.Username)
+	usersUserNameKey := fmt.Sprintf("%s%v", cacheUsersUserNamePrefix, data.UserName)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
-	}, usersIdKey, usersUsernameKey)
+	}, usersIdKey, usersUserNameKey)
 	return err
 }
 
@@ -95,12 +97,12 @@ func (m *defaultUsersModel) FindOne(ctx context.Context, id int64) (*Users, erro
 	}
 }
 
-func (m *defaultUsersModel) FindOneByUsername(ctx context.Context, username string) (*Users, error) {
-	usersUsernameKey := fmt.Sprintf("%s%v", cacheUsersUsernamePrefix, username)
+func (m *defaultUsersModel) FindOneByUserName(ctx context.Context, userName string) (*Users, error) {
+	usersUserNameKey := fmt.Sprintf("%s%v", cacheUsersUserNamePrefix, userName)
 	var resp Users
-	err := m.QueryRowIndexCtx(ctx, &resp, usersUsernameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
-		query := fmt.Sprintf("select %s from %s where `username` = ? limit 1", usersRows, m.table)
-		if err := conn.QueryRowCtx(ctx, &resp, query, username); err != nil {
+	err := m.QueryRowIndexCtx(ctx, &resp, usersUserNameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
+		query := fmt.Sprintf("select %s from %s where `user_name` = ? limit 1", usersRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, userName); err != nil {
 			return nil, err
 		}
 		return resp.Id, nil
@@ -117,11 +119,11 @@ func (m *defaultUsersModel) FindOneByUsername(ctx context.Context, username stri
 
 func (m *defaultUsersModel) Insert(ctx context.Context, data *Users) (sql.Result, error) {
 	usersIdKey := fmt.Sprintf("%s%v", cacheUsersIdPrefix, data.Id)
-	usersUsernameKey := fmt.Sprintf("%s%v", cacheUsersUsernamePrefix, data.Username)
+	usersUserNameKey := fmt.Sprintf("%s%v", cacheUsersUserNamePrefix, data.UserName)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, usersRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Username, data.Password, data.Nickname, data.Avatar, data.Role, data.Status, data.DeletedAt)
-	}, usersIdKey, usersUsernameKey)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, usersRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserName, data.Password, data.NickName, data.Avatar, data.RoleId, data.Status, data.Email, data.Mobile, data.DeletedAt)
+	}, usersIdKey, usersUserNameKey)
 	return ret, err
 }
 
@@ -132,11 +134,11 @@ func (m *defaultUsersModel) Update(ctx context.Context, newData *Users) error {
 	}
 
 	usersIdKey := fmt.Sprintf("%s%v", cacheUsersIdPrefix, data.Id)
-	usersUsernameKey := fmt.Sprintf("%s%v", cacheUsersUsernamePrefix, data.Username)
+	usersUserNameKey := fmt.Sprintf("%s%v", cacheUsersUserNamePrefix, data.UserName)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, usersRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.Username, newData.Password, newData.Nickname, newData.Avatar, newData.Role, newData.Status, newData.DeletedAt, newData.Id)
-	}, usersIdKey, usersUsernameKey)
+		return conn.ExecCtx(ctx, query, newData.UserName, newData.Password, newData.NickName, newData.Avatar, newData.RoleId, newData.Status, newData.Email, newData.Mobile, newData.DeletedAt, newData.Id)
+	}, usersIdKey, usersUserNameKey)
 	return err
 }
 

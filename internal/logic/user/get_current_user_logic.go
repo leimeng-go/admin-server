@@ -30,18 +30,18 @@ func (l *GetCurrentUserLogic) GetCurrentUser() (user *types.UserInfo, err error)
 	if err != nil {
 		return nil, err
 	}
-	muser, err := l.svcCtx.UserModel.FindOne(l.ctx, userID)
+	muser, err := l.svcCtx.UserModel.FindOne(l.ctx, int64(userID))
 	if err != nil {
 		return nil, err
 	}
 	return &types.UserInfo{
 		ID:        muser.Id,
-		Username:  muser.Username,
-		Nickname:  muser.Nickname,
+		Username:  muser.UserName,
+		Nickname:  muser.NickName,
 		Avatar:    muser.Avatar,
 		Email:     muser.Email,
 		Mobile:    muser.Mobile,
-		Role:      muser.Role,
+		RoleID:    muser.RoleId,
 		Status:    muser.Status,
 		CreatedAt: muser.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: muser.UpdatedAt.Format("2006-01-02 15:04:05"),

@@ -1,7 +1,7 @@
 Name: admin
 Host: 0.0.0.0
 Port: 8888
-Timeout: 60000
+Timeout: 600000
 
 Auth:
   AccessSecret: fsfjsldkjfkdjkjfkdjf
@@ -17,12 +17,18 @@ Database:
 Redis:
   Host: localhost:6379
   Type: node
-  Pass: ""
+  Pass: "181205"
 
 CacheRedis:
   Host: localhost:6379
   Type: node
-  Pass: ""
+  Pass: "181205"
+  PoolSize: 100
+  MinIdleConns: 10
+  IdleTimeout: 300
+  ConnTimeout: 5000
+  ReadTimeout: 3000
+  WriteTimeout: 3000
 
 Email:
   Host: smtp.gmail.com

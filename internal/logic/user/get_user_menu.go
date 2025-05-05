@@ -29,7 +29,7 @@ func (l *GetUserMenuLogic) GetUserMenu() ([]*types.Route, error) {
 		return nil, err
 	}
 	// 获取当前登录用户
-	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userID)
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, int64(userID))
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (l *GetUserMenuLogic) GetUserMenu() ([]*types.Route, error) {
 	if err != nil {
 		return nil, err
 	}
-	menuRoles, err := l.svcCtx.RoleMenuModel.FindMenuIDsByRoleId(l.ctx, role.Id)
+	menuRoles, err := l.svcCtx.RoleMenuModel.FindMenuIDsByRoleId(l.ctx, role.RoleId)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (l *GetUserMenuLogic) GetUserMenu() ([]*types.Route, error) {
 	for _, v := range menuRoles {
 		menuIDs = append(menuIDs, v.MenuId)
 	}
-	menus, err := l.svcCtx.MenusModel.FindMenusByIDs(l.ctx, menuIDs)
+	menus, err := l.svcCtx.MenuModel.FindMenusByIDs(l.ctx, menuIDs)
 	if err != nil {
 		return nil, err
 	}
@@ -55,37 +55,39 @@ func (l *GetUserMenuLogic) GetUserMenu() ([]*types.Route, error) {
 	var roots []*types.Route
 	for _, menu := range menus {
 		route := &types.Route{
-			ID:        int(menu.MenuId),
-			Name:      menu.Name,
-			Path:      menu.Path,
-			// Component: menu.Component.String,
+			ID:   int(menu.MenuId),
+			Name: menu.Name,
+			Path: menu.Path,
 			Meta: types.Meta{
 				Title:             menu.Title,
-				// Icon:              menu.Icon.String,
 				KeepAlive:         menu.KeepAlive == 1,
-				// ShowTextBadge:     menu.TextBadge.String,
 				ShowBadge:         menu.ShowBadge == 1,
-				// Link:              menu.Link.String,
 				IsIframe:          menu.IsIframe == 1,
 				IsHide:            menu.IsHide == 1,
 				IsHideTab:         menu.IsHideTab == 1,
 				IsInMainContainer: menu.IsInMainContainer == 1,
 			},
-			Children: nil,
+			Children: make([]*types.Route, 0),
 		}
 		if menu.Component.Valid {
-			route.Component = menu.Component.String
+			// 将 RoutesAlias.XXX 格式转换为 ../../viewsRoutesAlias 格式
+			component := menu.Component.String
+			// if strings.HasPrefix(component, "RoutesAlias.") {
+			// 	route.Component = "../../viewsRoutesAlias"
+			// } else {
+				route.Component = component
+			// }
 		}
 		if menu.Icon.Valid {
 			route.Meta.Icon = menu.Icon.String
 		}
-		if menu.TextBadge.Valid {
-			route.Meta.ShowTextBadge = menu.TextBadge.String
+		if menu.ShowTextBadge.Valid {
+			route.Meta.ShowTextBadge = menu.ShowTextBadge.String
 		}
 		if menu.Link.Valid {
 			route.Meta.Link = menu.Link.String
 		}
-		routeMap[menu.Id] = route
+		routeMap[menu.MenuId] = route
 	}
 
 	// 2. 组装树结构
@@ -94,7 +96,7 @@ func (l *GetUserMenuLogic) GetUserMenu() ([]*types.Route, error) {
 		if menu.ParentMenuId == 0 {
 			roots = append(roots, route)
 		} else if parent, ok := routeMap[menu.ParentMenuId]; ok {
-			parent.Children = append(parent.Children, *route)
+			parent.Children = append(parent.Children, route)
 		}
 	}
 

@@ -18,6 +18,12 @@ type (
 		*defaultUsersModel
 	}
 )
+const (
+	UserStatusNormal   = 1
+	UserStatusDisabled = 2
+	UserStatusDeleted  = 3
+)
+
 
 // NewUsersModel returns a model for the database table.
 func NewUsersModel(conn sqlx.SqlConn, c cache.NodeConf, opts ...cache.Option) UsersModel {

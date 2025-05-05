@@ -31,7 +31,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(req *types.LoginReq) (map[string]interface{}, error) {
 	// 查找用户
-	user, err := l.svcCtx.UserModel.FindOneByUsername(l.ctx, req.Username)
+	user, err := l.svcCtx.UserModel.FindOneByUserName(l.ctx, req.Username)
 	if err != nil {
 		return nil, errorx.ErrUserNotFound
 	}
