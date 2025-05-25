@@ -1,0 +1,46 @@
+type AuthItem {
+	ID       int    `json:"id"`
+	Title    string `json:"title"`
+	AuthMark string `json:"auth_mark"`
+}
+
+type Meta {
+	Title             string     `json:"title"`
+	Icon              string     `json:"icon,omitempty"`
+	KeepAlive         bool       `json:"keepAlive"`
+	ShowTextBadge     string     `json:"showTextBadge,omitempty"`
+	ShowBadge         bool       `json:"showBadge,omitempty"`
+	Link              string     `json:"link,omitempty"`
+	IsIframe          bool       `json:"isIframe,omitempty"`
+	IsHide            bool       `json:"isHide,omitempty"`
+	IsHideTab         bool       `json:"isHideTab,omitempty"`
+	IsInMainContainer bool       `json:"isInMainContainer,omitempty"`
+	AuthList          []AuthItem `json:"authList,omitempty"`
+}
+
+type Route {
+	ID        int      `json:"id"` //路由id
+	Name      string   `json:"name"` //路由名称
+	Path      string   `json:"path"` //
+	Component string   `json:"component"`
+	Meta      Meta     `json:"meta"`
+	Children  []*Route `json:"children,omitempty"`
+}
+type MenuInfoResp {
+    List []Route `json:"list"`
+}
+
+@server(
+    tags: "menu"
+    summary: "菜单"
+    prefix: "/api/v1"
+    group: "menu"
+    jwt: Auth
+)
+service admin{
+    @doc(
+      description: "获取菜单信息"
+    )
+    @handler menu
+    get /menu/info returns (MenuInfoResp)
+}

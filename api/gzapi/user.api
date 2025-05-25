@@ -1,0 +1,28 @@
+
+type UserInfoResp{
+    UserName string `json:"username"` //用户名
+    Email string `json:"email"` //邮箱
+    Mobile string `json:"mobile"` //手机号
+    Nickname string `json:"nickname"` //昵称
+    Avatar string `json:"avatar"` //头像
+    RoleID int64 `json:"role_id"` //角色ID
+    Status int64 `json:"status"` //状态
+    CreateTime string `json:"create_time"` //创建时间
+    UpdateTime string `json:"update_time"` //更新时间
+}
+
+@server(
+    tags: "user"
+    summary: "用户"
+    prefix: "/api/v1"
+    group: "user"
+    jwt: Auth
+)
+
+service admin{
+    @doc(
+      description: "获取用户信息"
+    )
+    @handler user 
+    get /user/info returns (UserInfoResp)
+}

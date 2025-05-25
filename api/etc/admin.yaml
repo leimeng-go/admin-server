@@ -1,0 +1,39 @@
+Name: admin
+Host: 0.0.0.0
+Port: 8888
+Timeout: 600000
+
+Auth:
+  AccessSecret: fsfjsldkjfkdjkjfkdjf
+  AccessExpire: 1800
+
+MySQL:
+  DataSource: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+Database:
+  Driver: mysql
+  Source: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+Redis:
+  Host: localhost:6379
+  Type: node
+  Pass: "181205"
+
+CacheRedis:
+  Host: localhost:6379
+  Type: node
+  Pass: "181205"
+  PoolSize: 100
+  MinIdleConns: 10
+  IdleTimeout: 300
+  ConnTimeout: 5000
+  ReadTimeout: 3000
+  WriteTimeout: 3000
+
+Email:
+  Host: smtp.gmail.com
+  Port: 587
+  Username: your-email@gmail.com
+  Password: your-app-password
+  From: your-email@gmail.com
+  FromName: Admin System

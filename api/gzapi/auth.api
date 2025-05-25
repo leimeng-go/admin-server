@@ -1,0 +1,41 @@
+type LoginReq {
+    Username string `json:"username" validate:"required" ` //用户名，必填
+    Password string `json:"password" validate:"required" ` //密码，必填
+}
+
+type LoginResp {
+    Token string `json:"token" doc:"token"` //token
+}
+
+type RegisterReq {
+   Username        string `json:"username" validate:"required,min=3,max=50" ` //用户名，必填，长度3-50
+	Email           string `json:"email" validate:"omitempty,email"` //邮箱，选填，格式为email
+	Mobile          string `json:"mobile" validate:"omitempty,len=11"` //手机号，选填，必须为11位
+	Password        string `json:"password" validate:"required,min=6,max=20"` //密码，必填，至少6位，最多20位
+	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"` //确认密码，必填，必须与密码相同
+	VerifyCode      string `json:"verifyCode" validate:"required,len=6"` //6位数字验证码
+	Nickname        string `json:"nickname" validate:"required,min=2,max=50"` //用户昵称，必填，长度2-50
+}
+
+
+
+
+@server(
+    tags: "auth"
+    summary: "登录"
+    prefix: "/api/v1"
+    group: "auth"
+)
+service admin {
+    @doc(
+       description: "登陆接口请求"
+    )
+    @handler login 
+    post /auth/login (LoginReq) returns (LoginResp)
+
+    @doc(
+       description: "注册接口请求"
+    )
+    @handler register
+    post /auth/register (RegisterReq)
+}
