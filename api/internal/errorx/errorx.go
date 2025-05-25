@@ -22,6 +22,10 @@ const (
 	TokenExpired  Code = 1004
 	TokenInvalid  Code = 1005
 
+
+	// 实体相关错误码 (1100-1199)
+	EntityNotFound Code = 1100
+
 	// 系统相关错误码 (2000-2999)
 	InternalServerError Code = 9999
 	
@@ -83,5 +87,7 @@ var(
 	ErrUserDisabled = NewError(UserDisabled, "用户禁用")
 	ErrTokenExpired = NewError(TokenExpired, "token过期")
 	ErrTokenInvalid = NewError(TokenInvalid, "token无效")
+
+	ErrEntityNotFound = NewError(EntityNotFound, "实体不存在")
 	ErrInternalServerError = NewError(InternalServerError, "服务器内部错误")
 )

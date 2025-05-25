@@ -31,3 +31,10 @@ type Route struct {
 	Meta      Meta     `json:"meta"`
 	Children  []*Route `json:"children,omitempty"`
 }
+
+type UpdateDepartmentReq struct {
+	ID       int64  `json:"id"`       // 部门id
+	Name     string `json:"name"`     // 部门名称
+	Sort     int64  `json:"sort"`     // 排序
+	ParentID int64  `json:"parentId"` // 父部门id
+}

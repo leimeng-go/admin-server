@@ -183,6 +183,598 @@
         }
       }
     },
+    "/api/v1/department/add": {
+      "post": {
+        "description": "添加部门",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "adddepartment",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "sort",
+                "parent_id"
+              ],
+              "properties": {
+                "name": {
+                  "description": "部门名称",
+                  "type": "string"
+                },
+                "parent_id": {
+                  "description": "父部门id",
+                  "type": "integer"
+                },
+                "sort": {
+                  "description": "排序",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {},
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/department/list": {
+      "get": {
+        "description": "获取部门列表",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "departmentlist",
+        "responses": {
+          "default": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "description": "部门列表",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "sort",
+                          "status",
+                          "created_time",
+                          "updated_time",
+                          "children"
+                        ],
+                        "properties": {
+                          "children": {
+                            "description": "子部门",
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "name",
+                                "sort",
+                                "status",
+                                "created_time",
+                                "updated_time",
+                                "children"
+                              ],
+                              "properties": {
+                                "children": {
+                                  "description": "子部门",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "created_time": {
+                                  "description": "创建时间",
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "部门id",
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "部门名称",
+                                  "type": "string"
+                                },
+                                "sort": {
+                                  "description": "排序",
+                                  "type": "integer"
+                                },
+                                "status": {
+                                  "description": "状态",
+                                  "type": "integer"
+                                },
+                                "updated_time": {
+                                  "description": "更新时间",
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "created_time": {
+                            "description": "创建时间",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "部门id",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "部门名称",
+                            "type": "string"
+                          },
+                          "sort": {
+                            "description": "排序",
+                            "type": "integer"
+                          },
+                          "status": {
+                            "description": "状态",
+                            "type": "integer"
+                          },
+                          "updated_time": {
+                            "description": "更新时间",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "page": {
+                      "description": "页码",
+                      "type": "integer"
+                    },
+                    "page_size": {
+                      "description": "每页条数",
+                      "type": "integer"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/department/update": {
+      "post": {
+        "description": "更新部门",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "updatedepartment",
+        "responses": {
+          "default": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "children": {
+                      "description": "子部门",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "sort",
+                          "status",
+                          "created_time",
+                          "updated_time",
+                          "children"
+                        ],
+                        "properties": {
+                          "children": {
+                            "description": "子部门",
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "name",
+                                "sort",
+                                "status",
+                                "created_time",
+                                "updated_time",
+                                "children"
+                              ],
+                              "properties": {
+                                "children": {
+                                  "description": "子部门",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "created_time": {
+                                  "description": "创建时间",
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "部门id",
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "部门名称",
+                                  "type": "string"
+                                },
+                                "sort": {
+                                  "description": "排序",
+                                  "type": "integer"
+                                },
+                                "status": {
+                                  "description": "状态",
+                                  "type": "integer"
+                                },
+                                "updated_time": {
+                                  "description": "更新时间",
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "created_time": {
+                            "description": "创建时间",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "部门id",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "部门名称",
+                            "type": "string"
+                          },
+                          "sort": {
+                            "description": "排序",
+                            "type": "integer"
+                          },
+                          "status": {
+                            "description": "状态",
+                            "type": "integer"
+                          },
+                          "updated_time": {
+                            "description": "更新时间",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "created_time": {
+                      "description": "创建时间",
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "部门id",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "部门名称",
+                      "type": "string"
+                    },
+                    "sort": {
+                      "description": "排序",
+                      "type": "integer"
+                    },
+                    "status": {
+                      "description": "状态",
+                      "type": "integer"
+                    },
+                    "updated_time": {
+                      "description": "更新时间",
+                      "type": "string"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/menu/info": {
+      "get": {
+        "description": "获取菜单信息",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "menu",
+        "responses": {
+          "default": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "path",
+                          "component",
+                          "meta",
+                          "children"
+                        ],
+                        "properties": {
+                          "children": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "name",
+                                "path",
+                                "component",
+                                "meta",
+                                "children"
+                              ],
+                              "properties": {
+                                "children": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "component": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "路由id",
+                                  "type": "integer"
+                                },
+                                "meta": {
+                                  "type": "object",
+                                  "required": [
+                                    "title",
+                                    "icon",
+                                    "keepAlive",
+                                    "showTextBadge",
+                                    "showBadge",
+                                    "link",
+                                    "isIframe",
+                                    "isHide",
+                                    "isHideTab",
+                                    "isInMainContainer",
+                                    "authList"
+                                  ],
+                                  "properties": {
+                                    "authList": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object"
+                                      }
+                                    },
+                                    "icon": {
+                                      "type": "string"
+                                    },
+                                    "isHide": {
+                                      "type": "boolean"
+                                    },
+                                    "isHideTab": {
+                                      "type": "boolean"
+                                    },
+                                    "isIframe": {
+                                      "type": "boolean"
+                                    },
+                                    "isInMainContainer": {
+                                      "type": "boolean"
+                                    },
+                                    "keepAlive": {
+                                      "type": "boolean"
+                                    },
+                                    "link": {
+                                      "type": "string"
+                                    },
+                                    "showBadge": {
+                                      "type": "boolean"
+                                    },
+                                    "showTextBadge": {
+                                      "type": "string"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "name": {
+                                  "description": "路由名称",
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "component": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "路由id",
+                            "type": "integer"
+                          },
+                          "meta": {
+                            "type": "object",
+                            "required": [
+                              "title",
+                              "icon",
+                              "keepAlive",
+                              "showTextBadge",
+                              "showBadge",
+                              "link",
+                              "isIframe",
+                              "isHide",
+                              "isHideTab",
+                              "isInMainContainer",
+                              "authList"
+                            ],
+                            "properties": {
+                              "authList": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "title",
+                                    "auth_mark"
+                                  ],
+                                  "properties": {
+                                    "auth_mark": {
+                                      "type": "string"
+                                    },
+                                    "id": {
+                                      "type": "integer"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "icon": {
+                                "type": "string"
+                              },
+                              "isHide": {
+                                "type": "boolean"
+                              },
+                              "isHideTab": {
+                                "type": "boolean"
+                              },
+                              "isIframe": {
+                                "type": "boolean"
+                              },
+                              "isInMainContainer": {
+                                "type": "boolean"
+                              },
+                              "keepAlive": {
+                                "type": "boolean"
+                              },
+                              "link": {
+                                "type": "string"
+                              },
+                              "showBadge": {
+                                "type": "boolean"
+                              },
+                              "showTextBadge": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "name": {
+                            "description": "路由名称",
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/info": {
       "get": {
         "description": "获取用户信息",
@@ -260,7 +852,7 @@
       }
     }
   },
-  "x-date": "2025-05-11 22:50:16",
+  "x-date": "2025-05-25 17:40:22",
   "x-description": "This is a goctl generated swagger file.",
   "x-github": "https://github.com/zeromicro/go-zero",
   "x-go-zero-doc": "https://go-zero.dev/",

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	auth "admin-server/api/internal/handler/auth"
+	entity "admin-server/api/internal/handler/entity"
 	menu "admin-server/api/internal/handler/menu"
 	user "admin-server/api/internal/handler/user"
 	"admin-server/api/internal/svc"
@@ -28,6 +29,28 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: auth.RegisterHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/department/add",
+				Handler: entity.AdddepartmentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/department/list",
+				Handler: entity.DepartmentlistHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/department/update",
+				Handler: entity.UpdatedepartmentHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 

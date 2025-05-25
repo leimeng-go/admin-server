@@ -5,7 +5,7 @@ Timeout: 600000
 
 Auth:
   AccessSecret: fsfjsldkjfkdjkjfkdjf
-  AccessExpire: 1800
+  AccessExpire: 1000000
 
 MySQL:
   DataSource: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai

@@ -3,6 +3,7 @@ syntax = "v1"
 import "gzapi/auth.api"
 import "gzapi/user.api"
 import "gzapi/menu.api"
+import "gzapi/entity.api"
 
 info (
 	title:                  "admin"
