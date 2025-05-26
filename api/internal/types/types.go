@@ -9,6 +9,16 @@ type AuthItem struct {
 	AuthMark string `json:"auth_mark"`
 }
 
+type Department struct {
+	ID         int64        `json:"id"`         // 部门id
+	Name       string       `json:"name"`       // 部门名称
+	Sort       int64        `json:"sort"`       // 排序
+	Status     int64        `json:"status"`     // 状态
+	CreateTime string       `json:"createTime"` // 创建时间
+	UpdateTime string       `json:"updateTime"` // 更新时间
+	Children   []Department `json:"children"`   // 子部门
+}
+
 type Meta struct {
 	Title             string     `json:"title"`
 	Icon              string     `json:"icon,omitempty"`
@@ -30,11 +40,4 @@ type Route struct {
 	Component string   `json:"component"`
 	Meta      Meta     `json:"meta"`
 	Children  []*Route `json:"children,omitempty"`
-}
-
-type UpdateDepartmentReq struct {
-	ID       int64  `json:"id"`       // 部门id
-	Name     string `json:"name"`     // 部门名称
-	Sort     int64  `json:"sort"`     // 排序
-	ParentID int64  `json:"parentId"` // 父部门id
 }

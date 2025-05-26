@@ -9,20 +9,20 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func AdddepartmentHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeletedepartmentHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.AddDepartmentReq
+		var req types.DeleteDepartmentReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := entity.NewAdddepartmentLogic(r.Context(), svcCtx)
-		err := l.Adddepartment(&req)
+		l := entity.NewDeletedepartmentLogic(r.Context(), svcCtx)
+		err := l.Deletedepartment(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			httpx.OkJsonCtx(r.Context(),w,nil)
+			httpx.OkJsonCtx(r.Context(), w, nil)
 		}
 	}
 }

@@ -10,22 +10,25 @@ type AddDepartmentReq struct {
 	ParentID int64  `json:"parentId"` // 父部门id
 }
 
-type Department struct {
-	ID          int64        `json:"id"`          // 部门id
-	Name        string       `json:"name"`        // 部门名称
-	Sort        int64        `json:"sort"`        // 排序
-	Status      int64        `json:"status"`      // 状态
-	CreatedTime string       `json:"createdTime"` // 创建时间
-	UpdatedTime string       `json:"updatedTime"` // 更新时间
-	Children    []Department `json:"children"`    // 子部门
+type DeleteDepartmentReq struct {
+	ID int64 `form:"id"` // 部门id
 }
 
 type DepartmentListReq struct {
-	Page     int64 `form:"page"`     // 页码
-	PageSize int64 `form:"pageSize"` // 每页条数
+	Key      string `form:"key"`      //关键字
+	Page     int64  `form:"page"`     // 页码
+	PageSize int64  `form:"pageSize"` // 每页条数
 }
 
 type DepartmentListResp struct {
 	Total int64        `json:"total"` // 总数
 	List  []Department `json:"list"`  // 部门列表
+}
+
+type UpdateDepartmentReq struct {
+	ID       int64  `json:"id"`       // 部门id
+	Name     string `json:"name"`     // 部门名称
+	Sort     int64  `json:"sort"`     // 排序
+	Status   int64  `json:"status"`   //状态
+	ParentID int64  `json:"parentId"` // 父部门id
 }

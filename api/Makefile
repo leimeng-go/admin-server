@@ -14,14 +14,14 @@ all: clean api model build run  ## Clean, generate API/model, build and run
 .PHONY: api
 api: ## Generate API code
 	@echo "Generating API code..."
-	goctl api go -api $(API_DIR)/$(API_FILE) -dir $(API_DIR) -style go_zero
+	goctl api go -api $(API_DIR)/$(API_FILE) -dir $(API_DIR) -style go_zero --home "/Users/menglei/workspace/admin-server/api/internal/template"
 
 # 生成 model 代码
 .PHONY: model
 model: ## Generate model code from MySQL DDL
 	@echo "Generating model code from MySQL DDL..."
 	@find ./internal/model -type d -name sql | while read dir; do \
-		goctl model mysql ddl -src="$$dir"/*.sql -dir=$${dir%/sql} -style=go_zero -cache=true --home "/Users/menglei/workspace/admin-server1/api/internal/template"; \
+		goctl model mysql ddl -src="$$dir"/*.sql -dir=$${dir%/sql} -style=go_zero -cache=true --home "/Users/menglei/workspace/admin-server/api/internal/template"; \
 	done
 
 # 生成 swagger 文档

@@ -2,7 +2,9 @@ package entity
 
 import (
 	"context"
+	"database/sql"
 
+	"admin-server/api/internal/errorx"
 	"admin-server/api/internal/svc"
 	"admin-server/api/internal/types"
 
@@ -23,8 +25,31 @@ func NewUpdatedepartmentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *UpdatedepartmentLogic) Updatedepartment() (resp *types.Department, err error) {
-	// todo: add your logic here and delete this line
+func (l *UpdatedepartmentLogic) Updatedepartment(req *types.UpdateDepartmentReq) error {
+	department,err:=l.svcCtx.DepartmentModel.FindOne(l.ctx,req.ID)
+	if err!=nil{
+		return err
+	}
+	if department==nil{
+		return errorx.ErrEntityNotFound
+	}
+	if department.Name!=req.Name{
+		department.Name=req.Name	
+	}
+	if department.Sort!=req.Sort{
+		department.Sort=req.Sort
+	}
+	if department.Status!=req.Status{
+		department.Status=req.Status
+	}
+	if req.ParentID!=0{
+		department.ParentId=sql.NullInt64{Int64: req.ParentID,Valid: true}
+	}
 
-	return
+	_,err=l.svcCtx.DepartmentModel.Update(l.ctx,nil,department)
+	if err!=nil{
+		return err
+	}
+	
+	return nil
 }

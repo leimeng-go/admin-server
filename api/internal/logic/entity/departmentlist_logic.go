@@ -3,6 +3,7 @@ package entity
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"admin-server/api/internal/pkg/utils"
 	"admin-server/api/internal/svc"
@@ -36,6 +37,11 @@ func (l *DepartmentlistLogic) Departmentlist(req *types.DepartmentListReq) (resp
 	entityUserQuery:=l.svcCtx.EntityUserModel.SelectBuilder().Where(
 		squirrel.Eq{"user_id":userID},
 	)
+	if req.Key!=""{
+		entityUserQuery=entityUserQuery.Where(squirrel.Like{
+			"name":"%"+req.Key+"%",
+		})
+	}
 	entityUsers,err:=l.svcCtx.EntityUserModel.FindAll(l.ctx,entityUserQuery,"id")
 	if err!=nil&&err!=sql.ErrNoRows{
 		return nil,err
@@ -63,8 +69,8 @@ func (l *DepartmentlistLogic) Departmentlist(req *types.DepartmentListReq) (resp
 			Name: v.Name,
 			Sort: v.Sort,
 			Status: v.Status,
-			CreatedTime: carbon.CreateFromStdTime(v.CreateTime).ToDateTimeString(),
-			UpdatedTime: carbon.CreateFromStdTime(v.UpdateTime).ToDateTimeString(),
+			CreateTime: carbon.CreateFromStdTime(v.CreateTime).ToDateTimeString(),
+			UpdateTime: carbon.CreateFromStdTime(v.UpdateTime).ToDateTimeString(),
 			Children: make([]types.Department,0),
 		})
 	}
