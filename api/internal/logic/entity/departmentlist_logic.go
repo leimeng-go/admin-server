@@ -3,7 +3,6 @@ package entity
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"admin-server/api/internal/pkg/utils"
 	"admin-server/api/internal/svc"
@@ -37,11 +36,7 @@ func (l *DepartmentlistLogic) Departmentlist(req *types.DepartmentListReq) (resp
 	entityUserQuery:=l.svcCtx.EntityUserModel.SelectBuilder().Where(
 		squirrel.Eq{"user_id":userID},
 	)
-	if req.Key!=""{
-		entityUserQuery=entityUserQuery.Where(squirrel.Like{
-			"name":"%"+req.Key+"%",
-		})
-	}
+
 	entityUsers,err:=l.svcCtx.EntityUserModel.FindAll(l.ctx,entityUserQuery,"id")
 	if err!=nil&&err!=sql.ErrNoRows{
 		return nil,err
@@ -53,6 +48,11 @@ func (l *DepartmentlistLogic) Departmentlist(req *types.DepartmentListReq) (resp
 	
 	departmentQuery:=l.svcCtx.DepartmentModel.SelectBuilder().Where(
 		squirrel.Eq{"entity_id":entityIds},)	
+	if req.Keyword!=""{
+		departmentQuery=departmentQuery.Where(squirrel.Like{
+			"name":"%"+req.Keyword+"%",
+		})
+	}
 	offset,limit:=utils.Page(req.Page,req.PageSize)
 	departmentList,total,err:=l.svcCtx.DepartmentModel.FindPageListByPageWithTotal(l.ctx,departmentQuery,offset,limit,"sort")
 	if err!=nil{

@@ -15,14 +15,22 @@ type DeleteDepartmentReq struct {
 }
 
 type DepartmentListReq struct {
-	Key      string `form:"key"`      //关键字
-	Page     int64  `form:"page"`     // 页码
-	PageSize int64  `form:"pageSize"` // 每页条数
+	Keyword  string `form:"keyword,optional"` //关键字
+	Page     int64  `form:"page"`             // 页码
+	PageSize int64  `form:"pageSize"`         // 每页条数
 }
 
 type DepartmentListResp struct {
 	Total int64        `json:"total"` // 总数
 	List  []Department `json:"list"`  // 部门列表
+}
+
+type TopDepartmentReq struct {
+	ParentID int64 `json:"parentId"` // 父部门id
+}
+
+type TopDepartmentResp struct {
+	List []TopDepartment `json:"list"` // 部门列表
 }
 
 type UpdateDepartmentReq struct {

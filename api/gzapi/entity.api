@@ -1,5 +1,5 @@
 type DepartmentListReq {
-    Key string `form:"key"` //关键字
+    Keyword string `form:"keyword,optional"` //关键字
     Page int64 `form:"page"` // 页码
     PageSize int64 `form:"pageSize"` // 每页条数
 }
@@ -38,6 +38,21 @@ type DeleteDepartmentReq{
     ID int64 `form:"id"` // 部门id
 }
 
+type TopDepartmentReq{
+    ParentID int64 `json:"parentId"` // 父部门id
+}
+
+type TopDepartment {
+    ID int64 `json:"id"` // 部门id
+    Name string `json:"name"` // 部门名称
+}
+
+type TopDepartmentResp{
+  List []TopDepartment `json:"list"` // 部门列表
+}
+
+
+
 @server(
     tags: "entity"
     summary: "部门"
@@ -54,6 +69,12 @@ service admin{
     get /department/list (DepartmentListReq) returns (DepartmentListResp)
 
     @doc(
+      description: "获取顶级部门列表"
+    )
+    @handler topdepartment
+    post /department/top (TopDepartmentReq) returns (TopDepartmentResp)
+
+    @doc(
       description: "添加部门"
     )
     @handler adddepartment
@@ -64,6 +85,8 @@ service admin{
     )
     @handler updatedepartment
     put /department/update (UpdateDepartmentReq) returns ()    
+
+    
 
     @doc(
       description: "删除部门"

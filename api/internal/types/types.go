@@ -41,3 +41,8 @@ type Route struct {
 	Meta      Meta     `json:"meta"`
 	Children  []*Route `json:"children,omitempty"`
 }
+
+type TopDepartment struct {
+	ID   int64  `json:"id"`   // 部门id
+	Name string `json:"name"` // 部门名称
+}

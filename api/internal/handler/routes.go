@@ -50,6 +50,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: entity.DepartmentlistHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPost,
+				Path:    "/department/top",
+				Handler: entity.TopdepartmentHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPut,
 				Path:    "/department/update",
 				Handler: entity.UpdatedepartmentHandler(serverCtx),
