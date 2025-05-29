@@ -53,8 +53,8 @@ func (l *DepartmentlistLogic) Departmentlist(req *types.DepartmentListReq) (resp
 			"name":"%"+req.Keyword+"%",
 		})
 	}
-	offset,limit:=utils.Page(req.Page,req.PageSize)
-	departmentList,total,err:=l.svcCtx.DepartmentModel.FindPageListByPageWithTotal(l.ctx,departmentQuery,offset,limit,"sort")
+	// offset,limit:=utils.Page(req.Page,req.PageSize)
+	departmentList,total,err:=l.svcCtx.DepartmentModel.FindPageListByPageWithTotal(l.ctx,departmentQuery,req.Page,req.PageSize,"sort")
 	if err!=nil{
 		return nil,err
 	}

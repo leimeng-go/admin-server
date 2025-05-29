@@ -3,8 +3,6 @@ package entity
 import (
 	"context"
 	"database/sql"
-
-	"admin-server/api/internal/errorx"
 	"admin-server/api/internal/model/entity"
 	"admin-server/api/internal/pkg/utils"
 	"admin-server/api/internal/svc"
@@ -34,19 +32,19 @@ func (l *AdddepartmentLogic) Adddepartment(req *types.AddDepartmentReq) error {
 		return err
 	}
 	
-	entityQuery:=l.svcCtx.EntityModel.SelectBuilder().Where(
-		squirrel.Eq{"owner_id":userID},
+	entityUserQuery:=l.svcCtx.EntityUserModel.SelectBuilder().Where(
+		squirrel.Eq{"user_id":userID},
 	)
-	count,err:=l.svcCtx.EntityModel.FindCount(l.ctx,entityQuery,"id")
+	entityUserList,err:=l.svcCtx.EntityUserModel.FindAll(l.ctx,entityUserQuery,"")
 	if err!=nil{
-		return err
+		return err  
 	}
-	
-	if count==0{
-		return errorx.ErrEntityNotFound
+	var entityId int64
+	if len(entityUserList)>0{
+       entityId=entityUserList[0].EntityId
 	}
 	department:=entity.Department{
-		EntityId: req.EntityId,
+		EntityId: entityId,
 		Status: entity.DepartmentStatusNormal,
 		Name: req.Name,
 		Sort: req.Sort,
