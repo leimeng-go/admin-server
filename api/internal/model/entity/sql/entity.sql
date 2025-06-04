@@ -9,7 +9,7 @@ CREATE TABLE `entity` (
   `status` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '状态（1=正常，0=禁用）',
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `delete_time` timestamp NULL DEFAULT NULL COMMENT '删除时间',
+  `delete_time` DATETIME DEFAULT NULL COMMENT '删除时间',
   `del_state` tinyint NOT NULL DEFAULT '0' COMMENT '删除状态 0:未删除 1:已删除',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_name` (`name`)

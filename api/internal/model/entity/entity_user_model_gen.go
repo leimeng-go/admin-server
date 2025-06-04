@@ -129,7 +129,7 @@ func (m *defaultEntityUserModel) FindOneByEntityIdUserId(ctx context.Context, en
 }
 
 func (m *defaultEntityUserModel) Insert(ctx context.Context, session sqlx.Session, data *EntityUser) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	entityUserEntityIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheEntityUserEntityIdUserIdPrefix, data.EntityId, data.UserId)
 	entityUserIdKey := fmt.Sprintf("%s%v", cacheEntityUserIdPrefix, data.Id)

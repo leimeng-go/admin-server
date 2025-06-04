@@ -29,14 +29,14 @@ var (
 	roleRowsWithPlaceHolder = strings.Join(stringx.Remove(roleFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheRoleIdPrefix   = "cache:role:id:"
-	cacheRoleCodePrefix = "cache:role:code:"
+	cacheRoleNamePrefix = "cache:role:name:"
 )
 
 type (
 	roleModel interface {
 		Insert(ctx context.Context, session sqlx.Session, data *Role) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Role, error)
-		FindOneByCode(ctx context.Context, code string) (*Role, error)
+		FindOneByName(ctx context.Context, name string) (*Role, error)
 		Update(ctx context.Context, session sqlx.Session, data *Role) (sql.Result, error)
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
 		SelectBuilder() squirrel.SelectBuilder
@@ -59,8 +59,8 @@ type (
 	Role struct {
 		Id          int64          `db:"id"`
 		Name        string         `db:"name"`        // 角色名称
-		Code        string         `db:"code"`        // 角色编码
 		Description sql.NullString `db:"description"` // 角色描述
+		Status      int64          `db:"status"`      // 状态 0:禁用 1:启用
 		CreateTime  time.Time      `db:"create_time"` // 创建时间
 		UpdateTime  time.Time      `db:"update_time"` // 更新时间
 		DeleteTime  sql.NullTime   `db:"delete_time"` // 删除时间
@@ -81,15 +81,15 @@ func (m *defaultRoleModel) Delete(ctx context.Context, session sqlx.Session, id 
 		return err
 	}
 
-	roleCodeKey := fmt.Sprintf("%s%v", cacheRoleCodePrefix, data.Code)
 	roleIdKey := fmt.Sprintf("%s%v", cacheRoleIdPrefix, id)
+	roleNameKey := fmt.Sprintf("%s%v", cacheRoleNamePrefix, data.Name)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		if session != nil {
 			return session.ExecCtx(ctx, query, id)
 		}
 		return conn.ExecCtx(ctx, query, id)
-	}, roleCodeKey, roleIdKey)
+	}, roleIdKey, roleNameKey)
 	return err
 }
 func (m *defaultRoleModel) FindOne(ctx context.Context, id int64) (*Role, error) {
@@ -109,12 +109,12 @@ func (m *defaultRoleModel) FindOne(ctx context.Context, id int64) (*Role, error)
 	}
 }
 
-func (m *defaultRoleModel) FindOneByCode(ctx context.Context, code string) (*Role, error) {
-	roleCodeKey := fmt.Sprintf("%s%v", cacheRoleCodePrefix, code)
+func (m *defaultRoleModel) FindOneByName(ctx context.Context, name string) (*Role, error) {
+	roleNameKey := fmt.Sprintf("%s%v", cacheRoleNamePrefix, name)
 	var resp Role
-	err := m.QueryRowIndexCtx(ctx, &resp, roleCodeKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
-		query := fmt.Sprintf("select %s from %s where `code` = ? and del_state = ? limit 1", roleRows, m.table)
-		if err := conn.QueryRowCtx(ctx, &resp, query, code, globalkey.DelStateNo); err != nil {
+	err := m.QueryRowIndexCtx(ctx, &resp, roleNameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `name` = ? and del_state = ? limit 1", roleRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, name, globalkey.DelStateNo); err != nil {
 			return nil, err
 		}
 		return resp.Id, nil
@@ -130,17 +130,17 @@ func (m *defaultRoleModel) FindOneByCode(ctx context.Context, code string) (*Rol
 }
 
 func (m *defaultRoleModel) Insert(ctx context.Context, session sqlx.Session, data *Role) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
-	roleCodeKey := fmt.Sprintf("%s%v", cacheRoleCodePrefix, data.Code)
 	roleIdKey := fmt.Sprintf("%s%v", cacheRoleIdPrefix, data.Id)
+	roleNameKey := fmt.Sprintf("%s%v", cacheRoleNamePrefix, data.Name)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, roleRowsExpectAutoSet)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.Name, data.Code, data.Description, data.DeleteTime, data.DelState)
+			return session.ExecCtx(ctx, query, data.Name, data.Description, data.Status, data.DeleteTime, data.DelState)
 		}
-		return conn.ExecCtx(ctx, query, data.Name, data.Code, data.Description, data.DeleteTime, data.DelState)
-	}, roleCodeKey, roleIdKey)
+		return conn.ExecCtx(ctx, query, data.Name, data.Description, data.Status, data.DeleteTime, data.DelState)
+	}, roleIdKey, roleNameKey)
 }
 
 func (m *defaultRoleModel) Update(ctx context.Context, session sqlx.Session, newData *Role) (sql.Result, error) {
@@ -148,15 +148,15 @@ func (m *defaultRoleModel) Update(ctx context.Context, session sqlx.Session, new
 	if err != nil {
 		return nil, err
 	}
-	roleCodeKey := fmt.Sprintf("%s%v", cacheRoleCodePrefix, data.Code)
 	roleIdKey := fmt.Sprintf("%s%v", cacheRoleIdPrefix, data.Id)
+	roleNameKey := fmt.Sprintf("%s%v", cacheRoleNamePrefix, data.Name)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, roleRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, newData.Name, newData.Code, newData.Description, newData.DeleteTime, newData.DelState, newData.Id)
+			return session.ExecCtx(ctx, query, newData.Name, newData.Description, newData.Status, newData.DeleteTime, newData.DelState, newData.Id)
 		}
-		return conn.ExecCtx(ctx, query, newData.Name, newData.Code, newData.Description, newData.DeleteTime, newData.DelState, newData.Id)
-	}, roleCodeKey, roleIdKey)
+		return conn.ExecCtx(ctx, query, newData.Name, newData.Description, newData.Status, newData.DeleteTime, newData.DelState, newData.Id)
+	}, roleIdKey, roleNameKey)
 }
 
 func (m *defaultRoleModel) DeleteSoft(ctx context.Context, session sqlx.Session, data *Role) error {

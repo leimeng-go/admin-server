@@ -129,7 +129,7 @@ func (m *defaultRoleMenuModel) FindOneByRoleIdMenuId(ctx context.Context, roleId
 }
 
 func (m *defaultRoleMenuModel) Insert(ctx context.Context, session sqlx.Session, data *RoleMenu) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	roleMenuIdKey := fmt.Sprintf("%s%v", cacheRoleMenuIdPrefix, data.Id)
 	roleMenuRoleIdMenuIdKey := fmt.Sprintf("%s%v:%v", cacheRoleMenuRoleIdMenuIdPrefix, data.RoleId, data.MenuId)

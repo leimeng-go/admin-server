@@ -9,6 +9,7 @@ import (
 	auth "admin-server/api/internal/handler/auth"
 	entity "admin-server/api/internal/handler/entity"
 	menu "admin-server/api/internal/handler/menu"
+	role "admin-server/api/internal/handler/role"
 	user "admin-server/api/internal/handler/user"
 	"admin-server/api/internal/svc"
 
@@ -70,6 +71,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/menu/info",
 				Handler: menu.MenuHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/role/add",
+				Handler: role.AddroleHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/role/delete",
+				Handler: role.DeleteroleHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/role/list",
+				Handler: role.RolelistHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/role/update",
+				Handler: role.UpdateroleHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

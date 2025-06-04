@@ -4,6 +4,7 @@ import "gzapi/auth.api"
 import "gzapi/user.api"
 import "gzapi/menu.api"
 import "gzapi/entity.api"
+import "gzapi/role.api"
 
 info (
 	title:                  "admin"

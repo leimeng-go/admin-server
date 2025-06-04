@@ -134,7 +134,7 @@ func (m *defaultEntityModel) FindOneByName(ctx context.Context, name string) (*E
 }
 
 func (m *defaultEntityModel) Insert(ctx context.Context, session sqlx.Session, data *Entity) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	entityIdKey := fmt.Sprintf("%s%v", cacheEntityIdPrefix, data.Id)
 	entityNameKey := fmt.Sprintf("%s%v", cacheEntityNamePrefix, data.Name)

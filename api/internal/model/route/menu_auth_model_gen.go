@@ -102,7 +102,7 @@ func (m *defaultMenuAuthModel) FindOne(ctx context.Context, id int64) (*MenuAuth
 }
 
 func (m *defaultMenuAuthModel) Insert(ctx context.Context, session sqlx.Session, data *MenuAuth) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	menuAuthIdKey := fmt.Sprintf("%s%v", cacheMenuAuthIdPrefix, data.Id)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {

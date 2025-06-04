@@ -105,7 +105,7 @@ func (m *defaultDepartmentModel) FindOne(ctx context.Context, id int64) (*Depart
 }
 
 func (m *defaultDepartmentModel) Insert(ctx context.Context, session sqlx.Session, data *Department) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	departmentIdKey := fmt.Sprintf("%s%v", cacheDepartmentIdPrefix, data.Id)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {

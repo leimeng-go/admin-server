@@ -129,7 +129,7 @@ func (m *defaultRoleUserModel) FindOneByRoleIdUserId(ctx context.Context, roleId
 }
 
 func (m *defaultRoleUserModel) Insert(ctx context.Context, session sqlx.Session, data *RoleUser) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	roleUserIdKey := fmt.Sprintf("%s%v", cacheRoleUserIdPrefix, data.Id)
 	roleUserRoleIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheRoleUserRoleIdUserIdPrefix, data.RoleId, data.UserId)

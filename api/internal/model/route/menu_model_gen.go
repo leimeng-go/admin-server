@@ -114,7 +114,7 @@ func (m *defaultMenuModel) FindOne(ctx context.Context, id int64) (*Menu, error)
 }
 
 func (m *defaultMenuModel) Insert(ctx context.Context, session sqlx.Session, data *Menu) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	menuIdKey := fmt.Sprintf("%s%v", cacheMenuIdPrefix, data.Id)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {

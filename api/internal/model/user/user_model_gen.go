@@ -181,7 +181,7 @@ func (m *defaultUserModel) FindOneByUserName(ctx context.Context, userName strin
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error) {
-	data.DeleteTime = sql.NullTime{Time: time.Now(), Valid: true}
+	data.DeleteTime = sql.NullTime{}
 	data.DelState = globalkey.DelStateNo
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)

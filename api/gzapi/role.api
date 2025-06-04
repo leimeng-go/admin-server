@@ -1,0 +1,68 @@
+type RoleListReq {
+    Page int64 `form:"page"` // 页码
+    PageSize int64 `form:"pageSize"` // 每页条数
+}
+
+type RoleListResp{
+    List []Role `json:"list"`
+    Total int64 `json:"total"`
+}
+
+type Role {
+    ID int64 `json:"id"` // 角色ID
+    Name string `json:"name"` // 角色名称
+    Description string `json:"description"` // 角色描述
+    CreateTime string `json:"createTime"` // 创建时间
+    UpdateTime string  `json:"updateTime"` // 更新时间
+    Status int64 `json:"status"` // 状态
+}
+
+type AddRoleReq {
+    Name string `json:"name"` // 角色名称
+    Description string `json:"description"` // 角色描述
+    Status int64 `json:"status"` // 状态
+}
+
+type UpdateRoleReq {
+    ID int64 `json:"id"` // 角色ID
+    Name string `json:"name"` // 角色名称
+    Description string `json:"description"` // 角色描述
+    Status int64 `json:"status"` // 状态
+}
+
+type DeleteRoleReq {
+    ID int64 `form:"id"` // 角色ID
+}
+
+@server(
+    tags: "role"
+    summary: "角色"
+    prefix: "/api/v1"
+    group: "role"
+    jwt: Auth
+)
+
+service admin {
+    @doc(
+        description: "获取角色列表"
+    )
+    @handler rolelist
+    get /role/list (RoleListReq) returns (RoleListResp)
+    @doc(
+        description: "添加角色"
+    )
+    @handler addrole
+    post /role/add (AddRoleReq) returns ()
+
+    @doc(
+        description: "编辑角色"
+    )
+    @handler updaterole
+    put /role/update (UpdateRoleReq) returns ()
+
+    @doc(
+        description: "删除角色"
+    )
+    @handler deleterole
+    delete /role/delete (DeleteRoleReq) returns ()
+}

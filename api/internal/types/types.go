@@ -33,6 +33,15 @@ type Meta struct {
 	AuthList          []AuthItem `json:"authList,omitempty"`
 }
 
+type Role struct {
+	ID          int64  `json:"id"`          // 角色ID
+	Name        string `json:"name"`        // 角色名称
+	Description string `json:"description"` // 角色描述
+	CreateTime  string `json:"createTime"`  // 创建时间
+	UpdateTime  string `json:"updateTime"`  // 更新时间
+	Status      int64  `json:"status"`      // 状态
+}
+
 type Route struct {
 	ID        int      `json:"id"`   //路由id
 	Name      string   `json:"name"` //路由名称
