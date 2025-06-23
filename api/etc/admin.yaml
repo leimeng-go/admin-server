@@ -1,14 +1,29 @@
 Name: admin
 Host: 0.0.0.0
-Port: 8888
+Port: 9999
+Mode: dev
 Timeout: 600000
 
+# 权限模型
+RBACModel: |
+  [request_definition]
+  r = sub, obj, act
+  [policy_definition]
+  p = sub, obj, act
+  [role_definition]
+  g = _, _
+  [policy_effect]
+  e = some(where (p.eft == allow))
+  [matchers]
+  m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+
 Auth:
-  AccessSecret: fsfjsldkjfkdjkjfkdjf
+  AccessSecret: 11a8a213-4324-411a-85d0-997ef8b4b73b
   AccessExpire: 1000000
 
-MySQL:
-  DataSource: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Casbin:
+  Driver: mysql
+  Source: root:Lei18120573365!@tcp(localhost:3306)/casbin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Database:
   Driver: mysql

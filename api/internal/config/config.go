@@ -11,9 +11,6 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	MySQL struct {
-		DataSource string
-	}
 	CacheRedis cache.NodeConf
 	Database   struct {
 		Driver string
@@ -24,6 +21,7 @@ type Config struct {
 		Type string
 		Pass string
 	}
+
 	Email struct {
 		Host     string
 		Port     int
@@ -31,5 +29,10 @@ type Config struct {
 		Password string
 		From     string
 		FromName string
+	}
+	RBACModel string
+	Casbin struct {
+		Driver string
+		Source string
 	}
 }

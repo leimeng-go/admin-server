@@ -26,6 +26,7 @@ func NewAddroleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddroleLo
 }
 
 func (l *AddroleLogic) Addrole(req *types.AddRoleReq) error {
+	
 	_,err:=l.svcCtx.RoleModel.Insert(l.ctx, nil,&permission.Role{
 		Name:        req.Name,
 		Description: sql.NullString{String: req.Description, Valid: true},

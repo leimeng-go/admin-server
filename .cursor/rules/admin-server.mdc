@@ -1,0 +1,51 @@
+---
+description: 
+globs: *.go
+alwaysApply: false
+---
+### **规则名称：ADMIN-SERVER 项目规范**
+
+### **描述：**
+
+这是一个使用 Go 语言和 `go-zero` 框架构建的后端管理服务。在与我协作时，请遵循以下约定和开发流程。
+
+#### **1. 项目核心组件**
+
+*   **框架**: `go-zero`
+*   **语言**: Go
+*   **API 定义**: `.api` 文件位于 `api/` 和 `api/gzapi/` 目录中。
+*   **数据库模型**: SQL 定义在 `api/internal/model/**/sql/` 目录下。
+
+#### **2. 开发流程**
+
+*   **第一步：定义 API (`.api` 文件)**
+    *   当需要新增或修改接口时，请先修改 `api/` 或 `api/gzapi/` 目录下的 `.api` 文件。
+    *   `.api` 文件是项目路由、请求/响应结构体的唯一真实来源。
+
+*   **第二步：定义数据模型 (`.sql` 文件)**
+    *   如果接口涉及新的数据表，请在 `api/internal/model/**/sql/` 目录下创建或修改对应的 `.sql` 文件。
+
+*   **第三步：代码生成 (Makefile)**
+    *   修改 `.api` 或 `.sql` 文件后，我会进入 `api/` 目录并使用 `Makefile` 中的命令来生成代码。
+        *   **API 相关代码**: 运行 `make api`。
+        *   **Model 相关代码**: 运行 `make model`。
+    *   我不会手动修改 `*_gen.go` 结尾的文件，因为它们会被覆盖。
+
+*   **第四步：实现业务逻辑**
+    *   业务逻辑的核心实现应在 `api/internal/logic/` 目录下的文件中完成。
+    *   对于数据库的复杂查询，自定义的逻辑应写在 `*model.go` 文件中（而不是 `*_model_gen.go`）。
+
+#### **3. 目录结构和职责**
+
+*   `api/`：API 定义和配置文件。
+*   `api/internal/handler/`：HTTP Handler，负责接收请求、参数校验和调用 `logic`。
+*   `api/internal/logic/`：业务逻辑层，处理具体的业务需求。
+*   `api/internal/model/`：数据库模型层，负责数据读写。
+*   `api/internal/svc/`：服务上下文（ServiceContext），用于管理和注入依赖。
+*   `api/internal/types/`：由 `.api` 文件生成的 Go 结构体。
+
+#### **4. 编码风格**
+
+*   遵循 `go-zero` 的最佳实践。
+*   代码风格保持一致，利用 Go 的格式化工具 `gofmt` 或 `goimports`。
+

@@ -3,6 +3,19 @@
 
 package types
 
+type CreateUserReq struct {
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Mobile   string `json:"mobile"`
+	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
+	RoleID   int64  `json:"role_id"`
+}
+
+type CreateUserResp struct {
+}
+
 type UserInfoResp struct {
 	UserName   string `json:"username"`    //用户名
 	Email      string `json:"email"`       //邮箱

@@ -1,4 +1,3 @@
-
 type UserInfoResp{
     UserName string `json:"username"` //用户名
     Email string `json:"email"` //邮箱
@@ -9,6 +8,20 @@ type UserInfoResp{
     Status int64 `json:"status"` //状态
     CreateTime string `json:"create_time"` //创建时间
     UpdateTime string `json:"update_time"` //更新时间
+}
+
+type CreateUserReq {
+    UserName string `json:"username"`
+    Password string `json:"password"`
+    Email string `json:"email"`
+    Mobile string `json:"mobile"`
+    Nickname string `json:"nickname"`
+    Avatar string `json:"avatar"`
+    RoleID int64 `json:"role_id"`
+}
+
+type CreateUserResp {
+    
 }
 
 @server(
@@ -25,4 +38,10 @@ service admin{
     )
     @handler user 
     get /user/info returns (UserInfoResp)
+
+    @doc(
+        description: "新增用户"
+    )
+    @handler createUser
+    post /user/create (CreateUserReq) returns (CreateUserResp)
 }

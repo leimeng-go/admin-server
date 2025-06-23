@@ -1,7 +1,7 @@
 # 设置变量
 BINARY=admin-server
 API_FILE=admin.api
-API_DIR=.
+API_DIR=./api
 SWAGGER_FILE_NAME=swagger
 DOCS_DIR=docs
 MODEL_DIR=api/internal/model
@@ -55,13 +55,13 @@ swagger-run: ## Serve Swagger UI for the generated swagger.json
 .PHONY: build
 build: ## Build the binary
 	@echo "Building $(BINARY)..."
-	go build -o $(BINARY)
+	go build -o $(BINARY) ./api/
 
 # 运行项目
 .PHONY: run
 run: ## Run the application
 	@echo "Running $(BINARY)..."
-	go run .
+	./$(BINARY) -f api/etc/admin.yaml
 
 # 清理生成的文件
 .PHONY: clean
