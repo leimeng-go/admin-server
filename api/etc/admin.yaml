@@ -1,6 +1,6 @@
 Name: admin
 Host: 0.0.0.0
-Port: 9999
+Port: 8888
 Mode: dev
 Timeout: 600000
 

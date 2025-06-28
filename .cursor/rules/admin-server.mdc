@@ -15,6 +15,8 @@ alwaysApply: false
 *   **语言**: Go
 *   **API 定义**: `.api` 文件位于 `api/` 和 `api/gzapi/` 目录中。
 *   **数据库模型**: SQL 定义在 `api/internal/model/**/sql/` 目录下。
+*   **权限管理**: 使用casbin实现权限校验
+*   **前端项目**: 使用vue3 element-plus vite开发
 
 #### **2. 开发流程**
 
