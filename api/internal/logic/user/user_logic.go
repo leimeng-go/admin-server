@@ -41,7 +41,7 @@ func (l *UserLogic) User() (resp *types.UserInfoResp, err error) {
 		Mobile: user.Mobile,
 		Nickname: user.NickName,
 		Avatar: user.Avatar,
-		RoleID: user.RoleId,
+		// RoleID: user.RoleId,
 		Status: user.Status,
 		CreateTime: user.CreateTime.Format("2006-01-02 15:04:05"),
 		UpdateTime: user.UpdateTime .Format("2006-01-02 15:04:05"),

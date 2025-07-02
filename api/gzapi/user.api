@@ -4,7 +4,7 @@ type UserInfoResp{
     Mobile string `json:"mobile"` //手机号
     Nickname string `json:"nickname"` //昵称
     Avatar string `json:"avatar"` //头像
-    RoleID int64 `json:"role_id"` //角色ID
+    RoleIDs []int64 `json:"role_ids"` //角色ID
     Status int64 `json:"status"` //状态
     CreateTime string `json:"create_time"` //创建时间
     UpdateTime string `json:"update_time"` //更新时间
@@ -22,6 +22,18 @@ type CreateUserReq {
 
 type CreateUserResp {
     
+}
+
+type GetUserListReq {
+    Current int64 `form:"current"`
+    Size int64 `form:"size"`
+}
+
+type GetUserListResp {
+    List []UserInfoResp `json:"list"`
+    Size int64 `json:"size"`
+    Current int64 `json:"current"`
+    Total int64 `json:"total"`
 }
 
 @server(
@@ -44,4 +56,12 @@ service admin{
     )
     @handler createUser
     post /user/create (CreateUserReq) returns (CreateUserResp)
+
+    @doc(
+        description: "获取用户列表"
+    )
+    @handler getUserList
+    get /user/list (GetUserListReq) returns (GetUserListResp)
+
+
 }

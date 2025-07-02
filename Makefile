@@ -2,9 +2,11 @@
 BINARY=admin-server
 API_FILE=admin.api
 API_DIR=./api
+TS_DIR=./web
 SWAGGER_FILE_NAME=swagger
 DOCS_DIR=docs
 MODEL_DIR=api/internal/model
+TEMPLATE_HOME=./api/internal/template
 
 # 默认目标
 .PHONY: all
@@ -14,14 +16,14 @@ all: clean api model build run  ## Clean, generate API/model, build and run
 .PHONY: api
 api: ## Generate API code
 	@echo "Generating API code..."
-	goctl api go -api $(API_DIR)/$(API_FILE) -dir $(API_DIR) -style go_zero --home "/Users/menglei/workspace/admin-server/api/internal/template"
+	goctl api go -api $(API_DIR)/$(API_FILE) -dir $(API_DIR) -style go_zero --home "$(TEMPLATE_HOME)" --test --type-group 
 
 # 生成 model 代码
 .PHONY: model
 model: ## Generate model code from MySQL DDL
 	@echo "Generating model code from MySQL DDL..."
 	@find ./internal/model -type d -name sql | while read dir; do \
-		goctl model mysql ddl -src="$$dir"/*.sql -dir=$${dir%/sql} -style=go_zero -cache=true --home "/Users/menglei/workspace/admin-server/api/internal/template"; \
+		goctl model mysql ddl -src="$$dir"/*.sql -dir=$${dir%/sql} -style=go_zero -cache=true --home "$(TEMPLATE_HOME)"; \
 	done
 
 # 生成 swagger 文档
@@ -46,10 +48,13 @@ swagger-install: ## Install go-swagger if not present
 		echo "swagger 已安装"; \
 	fi
 
-# 运行swagger 
+# 运行swagger (WSL环境适配)
 .PHONY: swagger-run
 swagger-run: ## Serve Swagger UI for the generated swagger.json
-	swagger serve -F=swagger $(DOCS_DIR)/$(SWAGGER_FILE_NAME).json
+	@echo "启动 Swagger UI 服务器..."
+	@echo "在 WSL 环境下，请手动在 Windows 浏览器中访问: http://localhost:8080"
+	@echo "如果无法访问，请尝试: http://$(shell hostname -I | awk '{print $$1}'):8080"
+	swagger serve -F=swagger --host=0.0.0.0 --port=8080 --no-open $(DOCS_DIR)/$(SWAGGER_FILE_NAME).json
 
 # 构建项目
 .PHONY: build

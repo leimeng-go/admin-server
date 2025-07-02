@@ -1,0 +1,1240 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "我的后台管理系统",
+    "title": "admin",
+    "contact": {
+      "name": "ramon"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/leimeng-go/admin-server/blob/main/LICENSE"
+    },
+    "version": "v1"
+  },
+  "host": "localhost:8888",
+  "basePath": "/",
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "登陆接口请求",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "auth"
+        ],
+        "summary": "login",
+        "operationId": "authLogin",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password"
+              ],
+              "properties": {
+                "password": {
+                  "description": "密码，必填",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "用户名，必填",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "description": "token",
+                      "type": "string"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "description": "注册接口请求",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "auth"
+        ],
+        "summary": "register",
+        "operationId": "authRegister",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "email",
+                "mobile",
+                "password",
+                "confirmPassword",
+                "verifyCode",
+                "nickname"
+              ],
+              "properties": {
+                "confirmPassword": {
+                  "description": "确认密码，必填，必须与密码相同",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "邮箱，选填，格式为email",
+                  "type": "string"
+                },
+                "mobile": {
+                  "description": "手机号，选填，必须为11位",
+                  "type": "string"
+                },
+                "nickname": {
+                  "description": "用户昵称，必填，长度2-50",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "密码，必填，至少6位，最多20位",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "用户名，必填，长度3-50",
+                  "type": "string"
+                },
+                "verifyCode": {
+                  "description": "6位数字验证码",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/department/add": {
+      "post": {
+        "description": "添加部门",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "adddepartment",
+        "operationId": "entityAdddepartment",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "entityId",
+                "name",
+                "sort",
+                "parentId"
+              ],
+              "properties": {
+                "entityId": {
+                  "description": "实体id",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "部门名称",
+                  "type": "string"
+                },
+                "parentId": {
+                  "description": "父部门id",
+                  "type": "integer"
+                },
+                "sort": {
+                  "description": "排序",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/department/delete": {
+      "delete": {
+        "description": "删除部门",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "deletedepartment",
+        "operationId": "entityDeletedepartment",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "部门id",
+            "name": "id",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/department/list": {
+      "get": {
+        "description": "获取部门列表",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "departmentlist",
+        "operationId": "entityDepartmentlist",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "关键字",
+            "name": "keyword",
+            "in": "query",
+            "allowEmptyValue": true
+          },
+          {
+            "type": "integer",
+            "description": "页码",
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "每页条数",
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "description": "部门列表",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "sort",
+                          "status",
+                          "createTime",
+                          "updateTime",
+                          "children"
+                        ],
+                        "properties": {
+                          "children": {
+                            "description": "子部门",
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "name",
+                                "sort",
+                                "status",
+                                "createTime",
+                                "updateTime",
+                                "children"
+                              ],
+                              "properties": {
+                                "children": {
+                                  "description": "子部门",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "createTime": {
+                                  "description": "创建时间",
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "部门id",
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "部门名称",
+                                  "type": "string"
+                                },
+                                "sort": {
+                                  "description": "排序",
+                                  "type": "integer"
+                                },
+                                "status": {
+                                  "description": "状态",
+                                  "type": "integer"
+                                },
+                                "updateTime": {
+                                  "description": "更新时间",
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "createTime": {
+                            "description": "创建时间",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "部门id",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "部门名称",
+                            "type": "string"
+                          },
+                          "sort": {
+                            "description": "排序",
+                            "type": "integer"
+                          },
+                          "status": {
+                            "description": "状态",
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "description": "更新时间",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "description": "总数",
+                      "type": "integer"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/department/top": {
+      "post": {
+        "description": "获取顶级部门列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "topdepartment",
+        "operationId": "entityTopdepartment",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "parentId"
+              ],
+              "properties": {
+                "parentId": {
+                  "description": "父部门id",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "description": "部门列表",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "properties": {
+                          "id": {
+                            "description": "部门id",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "部门名称",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/department/update": {
+      "put": {
+        "description": "更新部门",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "entity"
+        ],
+        "summary": "updatedepartment",
+        "operationId": "entityUpdatedepartment",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "sort",
+                "status",
+                "parentId"
+              ],
+              "properties": {
+                "id": {
+                  "description": "部门id",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "部门名称",
+                  "type": "string"
+                },
+                "parentId": {
+                  "description": "父部门id",
+                  "type": "integer"
+                },
+                "sort": {
+                  "description": "排序",
+                  "type": "integer"
+                },
+                "status": {
+                  "description": "状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/menu/info": {
+      "get": {
+        "description": "获取菜单信息",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "menu"
+        ],
+        "summary": "menu",
+        "operationId": "menuMenu",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "path",
+                          "component",
+                          "meta",
+                          "children"
+                        ],
+                        "properties": {
+                          "children": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "id",
+                                "name",
+                                "path",
+                                "component",
+                                "meta",
+                                "children"
+                              ],
+                              "properties": {
+                                "children": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "component": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "路由id",
+                                  "type": "integer"
+                                },
+                                "meta": {
+                                  "type": "object",
+                                  "required": [
+                                    "title",
+                                    "icon",
+                                    "keepAlive",
+                                    "showTextBadge",
+                                    "showBadge",
+                                    "link",
+                                    "isIframe",
+                                    "isHide",
+                                    "isHideTab",
+                                    "isInMainContainer",
+                                    "authList"
+                                  ],
+                                  "properties": {
+                                    "authList": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object"
+                                      }
+                                    },
+                                    "icon": {
+                                      "type": "string"
+                                    },
+                                    "isHide": {
+                                      "type": "boolean"
+                                    },
+                                    "isHideTab": {
+                                      "type": "boolean"
+                                    },
+                                    "isIframe": {
+                                      "type": "boolean"
+                                    },
+                                    "isInMainContainer": {
+                                      "type": "boolean"
+                                    },
+                                    "keepAlive": {
+                                      "type": "boolean"
+                                    },
+                                    "link": {
+                                      "type": "string"
+                                    },
+                                    "showBadge": {
+                                      "type": "boolean"
+                                    },
+                                    "showTextBadge": {
+                                      "type": "string"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "name": {
+                                  "description": "路由名称",
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "component": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "路由id",
+                            "type": "integer"
+                          },
+                          "meta": {
+                            "type": "object",
+                            "required": [
+                              "title",
+                              "icon",
+                              "keepAlive",
+                              "showTextBadge",
+                              "showBadge",
+                              "link",
+                              "isIframe",
+                              "isHide",
+                              "isHideTab",
+                              "isInMainContainer",
+                              "authList"
+                            ],
+                            "properties": {
+                              "authList": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "title",
+                                    "auth_mark"
+                                  ],
+                                  "properties": {
+                                    "auth_mark": {
+                                      "type": "string"
+                                    },
+                                    "id": {
+                                      "type": "integer"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "icon": {
+                                "type": "string"
+                              },
+                              "isHide": {
+                                "type": "boolean"
+                              },
+                              "isHideTab": {
+                                "type": "boolean"
+                              },
+                              "isIframe": {
+                                "type": "boolean"
+                              },
+                              "isInMainContainer": {
+                                "type": "boolean"
+                              },
+                              "keepAlive": {
+                                "type": "boolean"
+                              },
+                              "link": {
+                                "type": "string"
+                              },
+                              "showBadge": {
+                                "type": "boolean"
+                              },
+                              "showTextBadge": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "name": {
+                            "description": "路由名称",
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/add": {
+      "post": {
+        "description": "添加角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "addrole",
+        "operationId": "roleAddrole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "policies",
+                "description",
+                "status"
+              ],
+              "properties": {
+                "description": {
+                  "description": "角色描述",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "角色名称",
+                  "type": "string"
+                },
+                "policies": {
+                  "description": "策略",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "object",
+                      "action"
+                    ],
+                    "properties": {
+                      "action": {
+                        "description": "动作",
+                        "type": "string"
+                      },
+                      "object": {
+                        "description": "对象",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "status": {
+                  "description": "状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/role/delete": {
+      "delete": {
+        "description": "删除角色",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "deleterole",
+        "operationId": "roleDeleterole",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "角色ID",
+            "name": "id",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/role/list": {
+      "get": {
+        "description": "获取角色列表",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "rolelist",
+        "operationId": "roleRolelist",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "页码",
+            "name": "page",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "每页条数",
+            "name": "pageSize",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "description",
+                          "createTime",
+                          "updateTime",
+                          "status"
+                        ],
+                        "properties": {
+                          "createTime": {
+                            "description": "创建时间",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "角色描述",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "角色ID",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "角色名称",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "状态",
+                            "type": "integer"
+                          },
+                          "updateTime": {
+                            "description": "更新时间",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/update": {
+      "put": {
+        "description": "编辑角色",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "role"
+        ],
+        "summary": "updaterole",
+        "operationId": "roleUpdaterole",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "description",
+                "status"
+              ],
+              "properties": {
+                "description": {
+                  "description": "角色描述",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "角色ID",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "角色名称",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "状态",
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {}
+          }
+        }
+      }
+    },
+    "/api/v1/user/create": {
+      "post": {
+        "description": "新增用户",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "createUser",
+        "operationId": "userCreateUser",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password",
+                "email",
+                "mobile",
+                "nickname",
+                "avatar",
+                "role_id"
+              ],
+              "properties": {
+                "avatar": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "mobile": {
+                  "type": "string"
+                },
+                "nickname": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "role_id": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object"
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/info": {
+      "get": {
+        "description": "获取用户信息",
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "user",
+        "operationId": "userUser",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "description": "\n\t0-成功\u003cbr\u003e\n\t1000-用户不存在\u003cbr\u003e\n\t1001-用户存在\u003cbr\u003e\n\t1002-密码错误\u003cbr\u003e\n\t1003-用户禁用\u003cbr\u003e\n\t1004-token过期\u003cbr\u003e\n\t1005-token无效\u003cbr\u003e\n\t",
+                  "type": "integer",
+                  "example": 0
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "avatar": {
+                      "description": "头像",
+                      "type": "string"
+                    },
+                    "create_time": {
+                      "description": "创建时间",
+                      "type": "string"
+                    },
+                    "email": {
+                      "description": "邮箱",
+                      "type": "string"
+                    },
+                    "mobile": {
+                      "description": "手机号",
+                      "type": "string"
+                    },
+                    "nickname": {
+                      "description": "昵称",
+                      "type": "string"
+                    },
+                    "role_id": {
+                      "description": "角色ID",
+                      "type": "integer"
+                    },
+                    "status": {
+                      "description": "状态",
+                      "type": "integer"
+                    },
+                    "update_time": {
+                      "description": "更新时间",
+                      "type": "string"
+                    },
+                    "username": {
+                      "description": "用户名",
+                      "type": "string"
+                    }
+                  }
+                },
+                "msg": {
+                  "description": "business message",
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-date": "2025-06-29 19:32:15",
+  "x-description": "This is a goctl generated swagger file.",
+  "x-github": "https://github.com/zeromicro/go-zero",
+  "x-go-zero-doc": "https://go-zero.dev/",
+  "x-goctl-version": "1.8.4"
+}

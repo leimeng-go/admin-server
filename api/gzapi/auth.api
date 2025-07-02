@@ -8,17 +8,25 @@ type LoginResp {
 }
 
 type RegisterReq {
-   Username        string `json:"username" validate:"required,min=3,max=50" ` //用户名，必填，长度3-50
-	Email           string `json:"email" validate:"omitempty,email"` //邮箱，选填，格式为email
-	Mobile          string `json:"mobile" validate:"omitempty,len=11"` //手机号，选填，必须为11位
+    Username        string `json:"username" validate:"required,min=3,max=50" ` //用户名，必填，长度3-50
 	Password        string `json:"password" validate:"required,min=6,max=20"` //密码，必填，至少6位，最多20位
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"` //确认密码，必填，必须与密码相同
-	VerifyCode      string `json:"verifyCode" validate:"required,len=6"` //6位数字验证码
-	Nickname        string `json:"nickname" validate:"required,min=2,max=50"` //用户昵称，必填，长度2-50
+	// VerifyCode      string `json:"verifyCode" validate:"required,len=6"` //6位数字验证码
 }
 
 
+type VerifyCodeReq {
+    Email string `json:"email" validate:"required,email"` //邮箱，必填，格式为email
+}
 
+
+type SendVerifyCodeReq {
+    Email string `json:"email" validate:"required,email"` //邮箱，必填，格式为email
+}
+
+type SendVerifyCodeResp {
+    Code string `json:"code" doc:"code"` //验证码
+}
 
 @server(
     tags: "auth"
@@ -38,4 +46,11 @@ service admin {
     )
     @handler register
     post /auth/register (RegisterReq)
+
+    @handler verifyCode
+    post /auth/verifyCode (VerifyCodeReq) returns ()
+
+    @handler sendVerifyCode
+    post /auth/sendVerifyCode (SendVerifyCodeReq) returns (SendVerifyCodeResp)
+
 }

@@ -23,11 +23,11 @@ Auth:
 
 Casbin:
   Driver: mysql
-  Source: root:Lei18120573365!@tcp(localhost:3306)/casbin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  Source: root:181205@tcp(host.docker.internal:3306)/casbin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Database:
   Driver: mysql
-  Source: root:Lei18120573365!@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  Source: root:181205@tcp(host.docker.internal:3306)/admin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Redis:
   Host: localhost:6379

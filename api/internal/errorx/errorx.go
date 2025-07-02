@@ -21,6 +21,7 @@ const (
 	UserDisabled  Code = 1003
 	TokenExpired  Code = 1004
 	TokenInvalid  Code = 1005
+	PasswordNotMatch Code = 1006
 
 
 	// 实体相关错误码 (1100-1199)
@@ -87,7 +88,7 @@ var(
 	ErrUserDisabled = NewError(UserDisabled, "用户禁用")
 	ErrTokenExpired = NewError(TokenExpired, "token过期")
 	ErrTokenInvalid = NewError(TokenInvalid, "token无效")
-
+	ErrPasswordNotMatch = NewError(PasswordNotMatch, "密码不匹配")
 	ErrEntityNotFound = NewError(EntityNotFound, "实体不存在")
 	ErrInternalServerError = NewError(InternalServerError, "服务器内部错误")
 )

@@ -24,10 +24,10 @@ type AddRoleReq {
     Status int64 `json:"status"` // 状态
 }
 
-type Policy struct{
+type Policy  {
     Object string `json:"object"` // 对象
     Action string `json:"action"` // 动作
-}
+}   
 
 type UpdateRoleReq {
     ID int64 `json:"id"` // 角色ID

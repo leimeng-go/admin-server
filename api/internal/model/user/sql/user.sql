@@ -15,6 +15,5 @@ CREATE TABLE IF NOT EXISTS `user`  (
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_user_name` (`user_name`),
     UNIQUE KEY `idx_email` (`email`),
-    UNIQUE KEY `idx_mobile` (`mobile`),
-    KEY `idx_status_deleted` (`status`, `deleted_at`)
+    UNIQUE KEY `idx_mobile` (`mobile`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表'; 
